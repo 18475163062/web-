@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script  src="jq/jquery-1.9.1.min.js"></script> 
+<style type="text/css">
+		#right-below {
+			width: 1107px;
+			background-color: #f1f1fc;
+			height: 768px;
+			position: relative;
+		}
+
+		p {
+			height: 35px;
+			margin: 0px;
+			padding-top: 10px;
+			font-size: 18px;
+		}
+
+		table tr:hover {
+			background: #f1f1fc;
+		}
+
+		table {
+			background: #eaf7ff;
+		}
+
+		table th {
+			background: #96d5ff;
+		}
+
+		#page-num {
+			width: 30px;
+			background-color: #f1f1fc;
+			border: #000 1px solid;
+		}
+
+		a {
+			text-decoration: none;
+			color: #000;
+		}
+
+		.M-box a {
+			min-width: 15px;
+			color: black;
+			text-align: center;
+			background: whitre;
+			border: 1px solid #eeeeee;
+			border-radius: 5px;
+			padding: 5px 10px;
+			margin: 20px 2px;
+			display: inline-block;
+		}
+
+		.M-box span {
+			min-width: 15px;
+			text-align: center;
+			border: 1px solid transparent;
+			padding: 5px 10px;
+			margin: 0 2px;
+			display: inline-block;
+
+		}
+
+		.M-box .active {
+			color: white;
+			background: #96d5ff;
+			border-radius: 5px;
+		}
+
+		.jump-ipt {
+			width: 30px;
+		}
+
+		.cc {
+			text-align: center;
+		}
+	</style>
+
+</head>
+<body>
+	<div id="right-below">
+
+		<table width="1100px" align="center" id="table">
+			<p>用户列表</p>
+
+		</table>
+
+		<div align="center">
+			<div class="M-box"></div>
+		</div>
+
+
+
+	</div>
+</body>
+ <script src="./js/Userlist.js"></script>
+ <script src="./jq/jquery.pagination.js">
+	</script>
+
+</html>

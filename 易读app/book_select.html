@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script src="jq/jquery.pagination.js"></script>
+	<style>
+		#top{
+			margin-top: -10px;
+			padding:0px;
+			text-align: center;
+			width: 290px;
+			float: left;
+		}
+		#top ul li{
+			text-decoration:none;
+			list-style: none;
+		}
+		#top1  li{
+			padding-left: 15px;
+			float: left;
+			text-align: left;
+		}
+		.tu{
+			width: 150px;
+			height: 200px;
+		}
+		.white_content {
+			display: none;
+			position: absolute;
+			top: 10%;
+			left: 25%;
+			width: 40%;
+			height: 30%;
+			border: 1px solid #52adff;
+			background-color: white;
+			z-index:1002;
+			/*overflow: auto;*/
+		}
+		#tianjiazhen{
+			padding-left: 100px;
+			width: 270px;
+			/*border: 1px solid red;*/
+			text-align: left;
+		}
+		#xiu{
+			width: 600px;
+			margin-left: 70px;
+			/*border: 1px solid red;*/
+		}
+		a{
+			text-decoration: none;
+			color: #626363;
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		$(function(){
+			getData(1);
+		});
+		function getData(page_num){
+			var _data = "page_num=" + page_num + "&page_size=9";
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/bookcategory/list",
+				type:"get",
+				dataType:"json",
+				cache:false,
+				xhrFields:{
+					withCredentials:true
+				},
+				data:_data,
+				success:function(result){
+					if (result.code ==200) {
+						initData(result.data);
+					}
+				}
+			})
+		}
+		function initData(data){
+			var list = data.list;
+			var tr_str="";
+			for (var i = 0; i < list.length; i++) {
+				tr_str += "<div id='top' data-category_id='"+list[i].category_id+"'>"+
+					"<ul>"+
+						// "<li><input type='checkbox' name='checks'   id='allChecksn'></li>"+
+						// 图片二进制解析方法
+						// "<li ><img onclick='showActivityBox(this)' src='"+"data:image/jpeg;base64," + list[i].image + "' class='tu'></img></li>" +
+						"<li ><img onclick='showActivityBox(this)' src='" +"http://118.89.41.29:8080" + list[i].image + "' class='tu'></img></li>" +
+							"<ul id='top1'>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].name +"</a></li>"+
+								"<li ><a href='#' onclick='deleteItem(this)'> 删除</li>"+
+								"<li ><a href='#' onclick='showActivityUpdateBox(this)'> 修改</li>"+
+							"</ul>"+
+					"</ul>"+
+				"</div>";
+			}
+			$("#button").html(tr_str);
+
+			$(".M-box").pagination({
+				pageCount: data.pages,
+				current: data.page_num,
+				callback: 'pageselectCallback',
+				prevContent: "上一页",
+				nextContent: "下一页",
+				jump: true,
+				coping: true,
+				callback: function (api) {
+					getData(api.getCurrent())
+				}
+			});
+
+		}
+
+		
+
+		
+ 
+   
+	</script>
+	<!-- 获取外键 -->
+	<script>
+		function showActivityBox(item) {
+    window.location.href = "book_c_select.html?category_id=" + $(item).closest("div").data("category_id");
+    return;
+}
+	</script>
+
+	<!-- 弹出框 -->
+	<script type="text/javascript">
+		//弹出隐藏层
+		function ShowDiv(show_div,bg_div){
+		document.getElementById(show_div).style.display='block';
+		document.getElementById(bg_div).style.display='block' ;
+		var bgdiv = document.getElementById(bg_div);
+		bgdiv.style.width = document.body.scrollWidth;
+		// bgdiv.style.height = $(document).height();
+		$("#"+bg_div).height($(document).height());
+		};
+		//关闭弹出层
+		function CloseDiv(show_div,bg_div)
+		{
+		document.getElementById(show_div).style.display='none';
+		document.getElementById(bg_div).style.display='none';
+		};
+	</script>
+	<!-- 增加 -->
+	<script>
+		function tijiao(){
+			var formData = new FormData($("#tianjia")[0]); 
+			$.ajax({ 
+			    url: 'http://118.89.41.29:8080/api/bookcategory/insert', 
+			    type: 'POST', 
+			    data: formData, 
+			    async: false, 
+			    contentType: false, 
+			    processData: false, 
+			    cache:false,//去掉缓存
+				xhrFields:{
+					withCredentials:true
+				},
+			    success: function(data) {
+			        if (data.code ==200) {
+						alert(data.msg);
+					}else{
+						alert(data.msg);
+					}
+			     }, 
+			     error:function(){
+							alert("网络连接错误");
+				}
+		    }); 
+		}
+	</script>
+	<!-- 删除 -->
+	<script>
+		function deleteItem(item) {
+			if (confirm("确定要删除吗？")) {
+				var category_id = $(item).closest("div").data("category_id");
+				var data = "";
+				data += "category_id=" + category_id;
+				$.ajax({
+					url: 'http://118.89.41.29:8080/api/bookcategory/delete',
+					type: "post",
+					dataType: "json",
+					cache: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					 beforeSend: function () {},
+					 complete: function () {},
+					data: data,
+					success: function (result) {
+						if (result.code == 200) {
+							alert(result.msg);
+							var tr = $(item).closest("div");
+							tr.remove();
+						}
+
+					}
+
+				});
+			}
+		}
+	</script>
+	<!-- 修改 -->
+	<script>
+		var activityXhr;
+    	var updateTr;
+    	function showActivityUpdateBox(item) {
+    	$(".activity-update-box").show();
+         var div=$(item).closest("div");
+        update_id = div.data("category_id");
+        if (activityXhr) activityXhr.abort();
+        	activityXhr = $.ajax({
+            url:"http://118.89.41.29:8080/api/bookcategory/selectById?category_id=" + update_id,
+            type: "get",
+            dataType: "json",
+            cache: false,
+            xhrFields: {
+               withCredentials: true
+          },
+            
+            success: function (result) {
+					if (result.code == 200) {
+						var data = result.data;
+						 var div = $("#subject-update");
+			                div.find("input[name=category_id]").val(data.category_id);
+			                div.find("input[name=name]").val(data.name);
+			                div.find("input[name=multipartFile]").val(data.multipartFile);
+					}
+				},
+        });
+    }
+
+    function activityUpdate() {
+        if (activityXhr) activityXhr.abort();
+        activityXhr = $.ajax({
+            url: "http://118.89.41.29:8080/api/bookcategory/update",
+            type: "post",
+            data: new FormData($("#subject-update-form")[0]),
+            dataType: "json",
+            cache: false, // 上传文件无需缓存
+            processData: false, // 用于对data参数进行序列化处理 这里必须false
+            contentType: false, // 必须
+            async : true,
+            cache: false,//清除缓存
+            xhrFields: {//跨域
+               withCredentials: true
+          },
+            success: function (result) {
+                if (result.code == 200) {
+                	alert(result.msg);
+                	// self.location="index.html";  
+                	window.location.href=document.referrer; 
+                    var dialog = $("#activity-update-dialog");
+                updateTr.children("#category_id").text(dialog.find("input[name=category_id]").val());
+                updateTr.children("#name").text(dialog.find("input[name=name]").val());
+                updateTr.children("#multipartFile").text(dialog.find("input[name=multipartFile]").val());
+
+                } else {
+                    
+                }
+            },error: function (result) {
+
+            }
+        });
+    }
+	</script>
+
+	<!-- 批量删除 -->
+	 <script>
+            function chAll() {
+                var flag = document.getElementById('allChecksn').checked;
+                var cks = document.getElementsByName('checks');
+                for (var i = 0; i < cks.length; i++) {
+                    cks[i].checked = flag;
+                }
+            }
+            function deleteAll(item) {
+                var checkedNum = $("input[name='checks']:checked").length;
+                if (checkedNum == 0) {
+                    alert("请选择至少一项！");
+                    return;
+                }
+                if (confirm("确定要删除所选项目？")) {
+                    var checkedList = new Array();
+                    var data = "";
+                    data += "id=" + id;
+                    $("input[name='checks']:checked").each(function () {
+                        checkedList.push($(this).val());
+                    });
+                    $.ajax({
+                        type: "get",
+                        url: "http://192.168.1.137:8089/api/activity/delete",
+                        data: {
+                            'delitems': checkedList.toString()
+                        },
+                        success: function (result) {
+                            $("[name='checks']:checkbox").attr("checked", false);
+                            window.location.reload();
+                        }
+                    })
+                }
+            }
+        </script>
+	
+	<div class="activity-update-box" style="background: #fff;  position: fixed; width: 600px; height:200px; margin-left:200px;margin-top: 100px; padding:0px; z-index: 900; display: none; border: 1px solid #52adff" >
+
+		<div id="xiu">
+			<h3>信息修改</h3>
+			<form id="subject-update-form">
+			    <table>
+			       <!--   <tr style="display:none;">
+			            <td>主键：</td>
+			             <td>
+			                <input autocomplete="off" name="category_id" value="" autocomplete="off" type="text">
+			            </td>
+			            
+			        <tr> -->
+			            <td>名字：</td>
+			            <td>
+			                <input autocomplete="off" name="name" value="" autocomplete="off" type="text">
+			            </td>
+			            </tr>
+			        <tr>
+			            <td>图片：</td>
+			            <td>
+			                <input autocomplete="off" name="multipartFile" value="" type="file">
+			            </td>
+			        </tr>
+
+			    </table>
+			        <input value="修改" onclick="activityUpdate()" type="button" class="revise"><input type="button" value="取消" id="btn2" onclick="$(this).closest('.activity-update-box').hide();" />
+			</form>
+		</div>
+	</div>
+
+	<div>
+	<!-- 增加 -->
+		<div style="width: 800px;text-align: center;">
+			<div cursor:pointer; style="text-align: right;"><input  type="button" value="增  加" style="color: #fff;background: #52adff;font-size: 12px;"  onclick="ShowDiv('MyDiv')" /></div>
+			<div id="MyDiv" class="white_content">
+				<div style="text-align: right; cursor: default; height: 40px;" id="move">
+					<input type="button" value="关闭" style="color: #fff;background: #52adff;font-size: 12px;" onclick="CloseDiv('MyDiv')">
+				</div>
+				<div>
+					<form id="tianjia" enctype="multipart/form-data"> 
+						<div id="tianjiazhen">		
+							<p>名字：<input type="text" name="name" autocomplete="off"></p>
+							<p>图片：<input type="file" name="multipartFile"></p>
+							<input type="button" onclick="tijiao()" value="提交"><input type="reset" value="重置">
+						</div>		
+					</form>
+				</div>
+			</div>
+		</div>
+
+	<!-- 正文 -->
+		<div id="button">
+			<!-- <input type='checkbox' onclick='chAll()' id='allChecksn' name='check'>全选
+                <a href='javascript:void(0);' onclick='deleteAll(this)'>删除</a> -->
+		</div>
+
+		<div align="center" style="clear: both; padding-top: 20px;">
+			<div class="M-box"></div>
+		</div>
+	</div>
+</body>
+</html>

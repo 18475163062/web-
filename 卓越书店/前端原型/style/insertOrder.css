@@ -1,0 +1,15 @@
+
+#container{
+	
+	text-align: center;
+	padding: 0px;
+	width: 1200px;
+    /*border: 1px solid red;*/
+}
+#container1{
+    margin:0 auto;
+    text-align: left;
+    padding: 0px;
+    width: 300px;
+    /*border: 1px solid red;*/
+}

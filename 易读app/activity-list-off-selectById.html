@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script>
+		function getQueryVariable(variable) {
+    	var query = window.location.search.substring(1);
+    	var vars = query.split("&");
+    	for (var i = 0; i < vars.length; i++) {
+       		var pair = vars[i].split("=");
+        	if (pair[0] == variable) return pair[1];
+    		}
+		}
+		$(function(){
+			showActivityBoxx(getQueryVariable("activity_id"))
+		})
+		function showActivityBoxx(activity_id) {
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/activity/selectById?activity_id=" + activity_id,
+				type: "get",
+				type: "get",
+        		dataType: "json",
+        		cache: false,
+        		xhrFields: {
+           		   withCredentials: true
+        		},
+        		success: function (result) {
+           			 if (result.code == 200) {
+           			 	initData(result.data);
+           			 }
+       			}
+			});
+		}
+		function initData(data){
+			var list =data;
+			var tr_str="";
+			tr_str +="<div  id='buttom' data-activity_id='"+list.activity_id+"'>"+
+				"<ul class='left'>"+
+						// "<li>"+ list.title+"</li>"+
+						"<li>"+ list.content +"</li>"+
+				"</ul>"+
+				"</div>";
+
+			$("#container").html(tr_str);
+		}
+	</script>
+	</script>
+</head>
+<body>
+	<div id="container">
+		
+	</div>
+</body>
+</html>

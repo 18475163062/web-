@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/js/jquery-1.9.1.min.js"></script>
+  <title>通知详情</title>
+  <link rel="stylesheet" href="/css/noticeDetail.css">
+</head>
+
+<body>
+  <main>
+    <div class="detail">
+      <!-- 此处是通知正文 -->
+      <div class="detailHeader">
+        <h3 id="notice-info-theme">测试标题</h3>
+        <p class="min">
+          作者：
+          <span id="notice-info-host"></span>
+          发表时间：
+          <span id="notice-info-date"></span>
+        </p>
+      </div>
+      <div id="notice-info-content"></div>
+      <p class="notice-info-annex"><a name="notice-info-annex">附件下载</a></p>
+    </div>
+    <div id="tool">
+      <!-- 此处是底部小工具栏 -->
+      【
+      <a href="javascript:void(0)" onclick="setFont('20px')" class="max">
+        <span class="fz">大</span>
+      </a>
+      <a href="javascript:void(0)" onclick="setFont('16px')">
+        <span class="fz">中</span>
+      </a>
+      <a href="javascript:void(0)" onclick="setFont('12px')" class="min">
+        <span class="fz">小</span>
+      </a>
+      】
+      <span>
+        <a href="javascript:void(0)" onclick="window.print()" style="color: red">【打印】</a>
+      </span>
+      <span>
+        <a href="">【返回】</a>
+      </span>
+    </div>
+  </main>
+  <script src="/js/notice.js?_=201806201"></script>
+  <!-- <script>
+  $(function () {
+        noticeDetail(getQueryVariable("id"))
+    })
+  function noticeDetail (id) {
+  $.ajax({
+    url: 'http://192.168.1.137:8089/api/notice/show/' + id,
+    type: 'get',
+    timeout: 1000,
+    cache: false,
+    xhrFields: {
+      withCredentials: true
+    },
+    success: function (result) {
+      if (result.code == 200) {
+        // $("#notice-list-box").hide()
+        // $("#notice-info-box").show()
+        let data = result.data;
+        $("#notice-info-theme").text(data.theme)
+        $("#notice-info-host").text(data.host)
+        $("#notice-info-date").text(data.date)
+        $('#notice-info-content').text(data.content)
+        if (data.annex) {
+            $("#notice-info-annex").show().children("a[name=annex]").attr("href", data.annex)
+        } else {
+            $("#notice-info-annex").hide()
+        }
+      }
+      console.log('先行测试成功，待后续')
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+      window.alert('通知显示失败，请与管理员联系。' + errorThrown)
+    }
+  })
+}
+
+function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) return pair[1];
+        }
+    }
+  </script> -->
+</body>
+
+</html>

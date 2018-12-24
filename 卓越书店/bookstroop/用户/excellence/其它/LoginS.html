@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录</title>
+	<style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        body{
+            background: url(./image/bg.jpg) no-repeat center center;
+            width: 100%;
+            height: 700px;           
+        }
+        table{
+            background:rgba(255,255,255,0.4) none repeat scroll !important; 
+            width: 350px;
+            height: 350px;
+            margin:100px auto;
+         
+            filter: alpha(opacity=40);
+           
+        }
+        table tr{
+            padding:0;
+            text-align: center;
+        }
+        table input{
+            position: relative;
+            line-height: 2em;
+        }
+	</style>
+	<script src="./js/jquery-1.9.1.min.js"></script>
+	<script>
+		function Logon(){	
+		$.ajax({
+            url : "http://192.168.1.138:8080/api/user/login",
+            type : "POST",
+            data : $("#form1").serialize(),
+            dataType : "json",
+            cache: false,
+            xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {
+                },
+                complete: function () {   
+                 },
+            success : function(result) {
+            	alert(result.msg);
+            	if (result.code == 200) window.location.href = "Cancellation.html";
+                },
+            error: function (result) {
+            	alert(result.msg);
+                }
+        });
+            
+       }
+
+	</script>
+</head>
+<body>
+	<form action="" id="form1">
+   <!--  <img src="./image/bg.jpg" alt="图片不存在"> -->
+    <table cellpadding="5" cellspacing="0" border="0" class="centenTable" align="center">
+    	<tr>
+            <td>账号：</td>
+            <td>
+                <input type="text" id="phone" name="mobile_phone" />
+            </td>
+        </tr>	
+    	<tr>
+            <td>密码：</td>
+            <td><input type="text" id="pow" name="password" /></td>
+        </tr>
+        <tr>
+            <td><input type="button" id="btn" value="登录"  onclick="Logon()"/></td>
+            <td><a href="#">取消</a></td>
+        </tr>
+    		
+    		
+    		
+        </table>
+	</form>
+</body>
+</html>

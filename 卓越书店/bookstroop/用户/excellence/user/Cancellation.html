@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>注销</title>
+	
+</head>
+<body>
+	<div class="personal">
+    <p>个人中心页</p>
+    <!--<p class="logout">注销</p>-->
+    <p>欢迎你!</p>
+   <!--  <p><button id="logout" onclick="logout()">注销</button></p>
+
+    <input type="hidden" value="{:U('Personal/logout')}" name="logout"  /> -->
+    <p><input type="button" value="注销登录" onclick="logout()" name="logout"></p>
+</div>
+	<script src="../js/jquery-1.9.1.min.js"></script>
+	<script>
+		function logout(){
+	        
+	        $.ajax({
+	            url : "http://192.168.1.138:8080/api/user/logout",
+	            dataType : "json",
+	            cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {},
+                complete: function () {},
+	           success : function(result) {
+	               if(result.status == 1){
+	                   alert(result.msg);
+	                   // window.location.href ="Login.html";
+
+	               }else{
+	                   alert(result.msg);
+	               }
+	               if (result.code == 200) window.location.href = "Login.html";
+	           },
+	             error: function (result) {
+            		alert(result.msg);
+                }
+	        });
+	 
+	    }
+	</script>
+</body>
+</html>

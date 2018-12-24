@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>分类</title>
+<script src="js/jquery-1.8.2.min.js"></script>
+<link rel="stylesheet" href="css/classify_style.css">
+
+<body>
+
+<script>
+$(function(){
+            getData(1);
+        });
+function getData(page_num) {
+    var _data = "page_num=" + page_num + "&page_size=1";
+            $.ajax({
+                url: "http://192.168.1.138:8080/api/category/list",
+                type: "get",
+                dataType: "json",
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },               
+                data: _data,
+                success: function (result) {
+                    if (result.code == 200) {
+                        initData(result.data);
+                    }
+                }
+            });
+        }
+
+//展示数据
+ function initData(data) {
+            var list = data.list;
+            var tr_str = "<tr>" +
+                "<td>ID</td>" +
+                "<td>ClassifyName</td>" +            
+                "</tr>";
+            for (var i = 0; i < list.length; i++) {
+                tr_str += "<tr>" +
+                "<td>" + list[i].id + "</td>" +     
+                "<td>" + list[i].name + "</td>" +                                     
+                "</tr>";
+            }
+            $("#tab").html(tr_str);
+        }
+</script>
+
+<table id="tab" border="1">
+
+</table>
+</body>
+</head>
+</html>

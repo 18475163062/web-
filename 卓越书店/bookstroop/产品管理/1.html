@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+	<script>
+	var activityXhr;
+    var updateTr;
+		$(function(){
+				getData(1);
+			});
+		function getData(){
+			$.ajax({
+				url:"http://192.168.1.138:8080/api/property/selectById/17",
+				type:"get",
+				dataType:"json",
+				cache:false,//去掉缓存
+				xhrFields:{
+					withCredentials:true
+				},
+				success: function (result) {
+					if (result.code == 200) {
+						initData(result.data);
+					}
+				}
+			});
+
+		}
+		function initData(data){
+			var list = data;
+			var tr_str = "<ul >" + 
+				
+			
+			
+
+				"</ul>";
+				for (var i = 0; i < list.length; i++) {
+				tr_str += "<ul  data-id='"+list[i].id+"'>" +		
+					"<li >"+"商品"+"<input type='text' name='id' value='"+list[i].id+"'>" + "</li>" +
+					"<li >" +"<input type='text' name='name' value='"+list[i].name+"'>"  + "</li>" +
+					"<li >" +"<input type='type' name='category_id' value='"+list[i].category_id+"'>"  + "</li>" +
+					"</ul>";
+			}
+			$("#container").html(tr_str);
+		}
+
+		  function activityUpdate() {
+
+
+
+        if (activityXhr) activityXhr.abort();
+        activityXhr = $.ajax({
+            url: "http://192.168.1.138:8080/api/property/update",
+            type: "post",
+            data: new FormData($("#activity-update-form")[0]),
+            dataType: "json",
+            cache: false, // 上传文件无需缓存
+            processData: false, // 用于对data参数进行序列化处理 这里必须false
+            contentType: false, // 必须
+            async : true,
+            cache: false,//清除缓存
+            xhrFields: {//跨域
+               withCredentials: true
+          },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                	alert(data.msg);
+                    var dialog = $("#activity-update-dialog");
+
+                    updateTr.children("#id").text(dialog.find("input[name=id]").val());
+                    updateTr.children("#name").text(dialog.find("input[name=name]").val());
+                    updateTr.children("#category_id").text(dialog.find("input[name=category_id]").val());
+                    
+                                                 
+                } else {
+                    
+                }
+            },error: function (result) {
+
+            }
+        });
+    }
+	</script>
+	<div id="activity-update-dialog" >
+	<form action="" id="activity-update-form">
+		<div id="container">
+
+		</div>
+		<input type="button" value="提交"  onclick="activityUpdate()" />
+	</form>
+	</div>
+	
+</body>
+</html>

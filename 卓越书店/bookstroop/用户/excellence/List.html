@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>查询全部用户</title>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+		}
+		 #getdata {
+            width: 100%;
+           /* background-color: #f1f1fc;*/
+            height: 768px;
+            position: relative;
+        }
+
+        p {
+            height: 35px;
+            margin: 0px;
+            padding-top: 10px;
+            font-size: 18px;
+        }
+
+        #getdata-atble {
+            background: #eaf7ff;
+            width: 100%;
+        }
+
+        #getdata-atble th {
+            background: #0090D7;
+        }
+        /*:nth-child(n) 选择器匹配属于其父元素的第 N 个子元素，不论元素的类型。*/
+       #getdata-atble tr:nth-child(odd){background:#ddd;
+        }
+		 /*table tr:nth-child(even){background: #f1f1fc;
+		} 
+		#getdata-atble tr:nth-child(2n+2) {
+		    background-color: #F4F4F4;
+		}*/
+        #getdata-atble tr:hover {
+            background: #73B1E0;
+            color:#FFF;
+        }
+		#getdata-atble{
+
+		}
+        #page-num {
+            width: 30px;
+            background-color: #f1f1fc;
+            border: #000 1px solid;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+        .center {
+            text-align: center;
+        }
+        table td {word-break: keep-all;white-space:nowrap;}
+        .shadow {
+            -webkit-box-shadow: #666 0px 0px 10px;
+            -moz-box-shadow: #666 0px 0px 10px;
+            box-shadow: #666 0px 0px 10px;
+        }
+
+        .page-box a {
+            min-width: 15px;
+            color: black;
+            text-align: center;
+            background: white;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 0 2px;
+            display: inline-block;
+        }
+        .page-box span {
+            min-width: 15px;
+            text-align: center;
+            border: 1px solid transparent;
+            padding: 5px 10px;
+            margin: 0 2px;
+            display: inline-block;
+        }
+        .page-box .active {
+            color: white;
+            background: #a0a0a0;
+            border-radius: 5px;
+
+        }
+        .page-box a:hover{
+        	background: #ccc;
+        }
+        input[type=text]{
+	    -webkit-appearance: button;
+	    -o-appearance: none;
+	    -webkit-appearance: none;
+	    padding: 9px;
+	    margin: 4px 5px;
+	    border-radius: 5px;
+	    border: #eeeeee solid 1px;
+		
+		}
+		input[type=text]:focus {
+		    border: #8cbbff solid 1px;
+		}
+	</style>	
+		
+	
+	<script src="./js/jquery-1.9.1.min.js"></script>
+    <script src="./js/jquery.pagination.js"></script>
+	<script>
+		var basePath = "http://192.168.1.138:8080";
+
+        $(function () {
+            getData(1);
+        });
+
+        function getData(page_num) {
+            var _data = "page_num=" + page_num + "&page_size=1";
+            $.ajax({
+                url: "http://192.168.1.138:8080/api/user/list",
+                type: "get",
+                dataType: "json",
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {},
+                complete: function () {},
+                data: _data,
+                success: function (result) {
+                    if (result.code == 200) {
+                        initData(result.data);
+
+                    }
+                }
+            });
+        }
+
+        function initData(data) {
+            var list = data.list;
+            var tr_str = "<tr>" +
+                "<th   width='200px'>密码</th>" +
+                "<th   width='200px' >email</th>" +
+                "<th   width='380px'>操作</th>" +
+                
+                "</tr>";
+            for (var i = 0; i < list.length; i++) {
+                tr_str += "<tr data-id='" + list[i].id + "'>" +
+                    "<td class='center'>" + list[i].password + "</td>" +
+                    "<td  class='center'>" + list[i].email + " </td>" +
+                    
+                    '<td class="center">' +
+                    '<a onclick="showActivityBox(this)">查看 &nbsp</a>' +
+                    '<a href="#" onclick="showActivityUpdateBox(this)">修改 &nbsp</a>' +
+                   
+                    '<a href="#" onclick="deleteItem(this);">删除</a>' +
+                    '</td>' 
+                "</tr>";
+            }
+            $("#getdata-atble").html(tr_str);
+            $(".M-box").pagination({
+                pageCount: data.pages,
+                current: data.page_num,
+                callback: 'pageselectCallback',
+                prevContent: "上一页",
+                nextContent: "下一页",
+                jump: true,
+                coping: true,
+                callback: function (api) {
+                    getData(api.getCurrent())
+                }
+            });
+        }
+	</script>
+</head>
+<body>
+	<div id="getdata">
+		<table align="center" id="getdata-atble">
+			<p>用户列表</p>
+		</table>
+
+		<div id="record-list-page" class="page-box" style="margin:50px auto; text-align: center;" > 
+		    <span class="active">1</span>
+		    <a href="javascript:;" data-page="2">2</a>
+		    <a href="javascript:;" data-page="3">3</a>
+		    <span>...</span>
+		    <a href="javascript:;" data-page="6">6</a>
+		    <a href="javascript:;" class="next">下一页</a>
+		    <input type="text" class="jump-ipt">
+		    <a href="javascript:;" class="jump-btn">跳转</a>
+		</div>
+	</div>
+</body>
+</html>

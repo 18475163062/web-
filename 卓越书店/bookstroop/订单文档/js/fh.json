@@ -1,0 +1,108 @@
+{
+    "lists": [
+        {
+            "num": "4003000001",
+            "logo": "已发货",
+            "pic": [
+                {
+                    "img": "img/goumai.png",
+                    "name": "方便面",
+                    "price": "6",
+                    "height": "800g/袋",
+                    "number": "1"
+                },
+                {
+                    "img": "img/goumai.png",
+                    "name": "绿茶1",
+                    "price": "7",
+                    "height": "600g/袋",
+                    "number": "2"
+                },
+                {
+                    "img": "img/goumai.png",
+                    "name": "绿茶2",
+                    "price": "7",
+                    "height": "600g/袋",
+                    "number": "2"
+                }
+            ],
+            "createtime": "2017-09-01",
+            "count": "2",
+            "yun": "60.0",
+            "pay": "90"
+        },
+        {
+            "num": "4003000002",
+            "logo": "未发货",
+            "pic": [
+                {
+                    "img": "img/goumai.png",
+                    "name": "营养快线",
+                    "price": "6",
+                    "height": "800g/瓶",
+                    "number": "1"
+                },
+                {
+                    "img": "img/goumai.png",
+                    "name": "红茶",
+                    "price": "7",
+                    "height": "600g/袋",
+                    "number": "3"
+                }
+            ],
+            "createtime": "2017-09-05",
+            "count": "2",
+            "yun": "60.0",
+            "pay": "90"
+        },
+        {
+            "num": "4003000003",
+            "logo": "已发货",
+            "pic": [
+                {
+                    "img": "img/goumai.png",
+                    "name": "咖啡豆",
+                    "price": "6",
+                    "height": "800g/袋",
+                    "number": "1"
+                },
+                {
+                    "img": "img/goumai.png",
+                    "name": "牛奶",
+                    "price": "7",
+                    "height": "600g/袋",
+                    "number": "1"
+                }
+            ],
+            "createtime": "2017-09-09",
+            "count": "2",
+            "yun": "60.0",
+            "pay": "90"
+        },
+        {
+            "num": "4003000004",
+            "logo": "已发货",
+            "pic": [
+                {
+                    "img": "img/goumai.png",
+                    "name": "绿茶1",
+                    "price": "3",
+                    "height": "1000ml/瓶",
+                    "number": "1"
+                },
+                {
+                    "img": "img/goumai.png",
+                    "name": "绿茶2",
+                    "price": "4",
+                    "height": "1000ml/瓶",
+                    "number": "1"
+                }
+            ],
+            "createtime": "2017-09-21",
+            "count": "2",
+            "yun": "60.0",
+            "pay": "90"
+        }
+    ]
+}
+

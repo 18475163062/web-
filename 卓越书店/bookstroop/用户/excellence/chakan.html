@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	
+	<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+		#user-list-table {
+			width: 1107px;
+			background-color: #f1f1fc;
+			height: 768px;
+			
+		}
+
+		
+		#user-list-table tr:hover {
+			background: #f1f1fc;
+		}
+
+		#user-list-table {
+			background: #eaf7ff;
+		}
+
+		#user-list-table th {
+			background: #96d5ff;
+		}
+
+		#page-num {
+			width: 30px;
+			background-color: #f1f1fc;
+			border: #000 1px solid;
+		}
+
+		a {
+			text-decoration: none;
+			color: #000;
+		}
+
+		#user-list-page a {
+			min-width: 15px;
+			color: black;
+			text-align: center;
+			background: white;
+			border: 1px solid #eeeeee;
+			border-radius: 5px;
+			padding: 5px 10px;
+			margin: 20px 2px;
+			display: inline-block;
+		}
+
+		#user-list-page span {
+			min-width: 15px;
+			text-align: center;
+			border: 1px solid transparent;
+			padding: 5px 10px;
+			margin: 0 2px;
+			display: inline-block;
+
+		}
+
+		#user-list-page .active {
+			color: white;
+			background: #96d5ff;
+			border-radius: 5px;
+		}
+
+		.jump-ipt {
+			width: 30px;
+		}
+
+		.cc {
+			text-align: center;
+		}
+       p {
+            height: 35px;
+            margin: 0px;
+            padding-top: 10px;
+            font-size: 18px;
+        }
+	</style>
+
+</head>
+<body>
+	<div style="height: 100%; padding-left: 200px;">
+	</div>
+	<div id="pjax-container" style="padding-top: 80px;z-index: 100;position: fixed;">
+		<span>用户列表</span>
+		<table align="left" id="user-list-table"></table>
+		<div align="center">
+				<div id="user-list-page" class="page-box"></div>
+			</div>
+	</div>
+	<!-- 查看 -->
+    <div style="height: 100%; width: 100%; padding-left: 200px; background: #f1f1fc;  position: fixed; z-index: 1000; display: none;" class="activity-box" style="font-size: 24px;">
+        <div id="pjax-content" style="padding-top: 80px;">
+        <form action="" id="form-details">
+            <input type="hidden" name="id" >
+            <span>用户详情</span>
+            <table>
+           
+           <tr><td>密码：<input type="text" name="password" style="border:0px; outline:none; background: #f1f1fc; pointer-events: none;"></td></tr>
+          
+           <tr><td>email：<input type="text" name="email" style="border:0px; outline:none; background: #f1f1fc; pointer-events: none;"></td></tr>
+            
+            </table>
+            </form>
+        </div>
+    </div>
+<!-- 查看 -->
+</body>
+<script  src="./js/jquery-1.9.1.min.js"></script> 
+ <script>
+ 	       var basePath = "http://192.168.1.138:8080";
+
+        $(function () {
+            getData(1);
+        });
+
+        function getData(page_num) {
+            var _data = "page_num=" + page_num + "&page_size=10";
+            $.ajax({
+                url: "http://192.168.1.138:8080/api/user/list",
+                type: "get",
+                dataType: "json",
+                
+                beforeSend: function () {},
+                complete: function () {},
+                data: _data,
+                success: function (result) {
+                    if (result.code == 200) {
+                        initData(result.data);
+
+                    }
+                }
+            });
+        }
+
+        function initData(data) {
+            var list = data.list;
+            var tr_str = "<tr>" 
+                 + "<th  width='180px'>密码：</th>"
+                 + "<th  width='180px'>email</th>"
+                 + "<th  width='280px'>操作</th>"
+                "</tr>";
+            for (var i = 0; i < list.length; i++) {
+                tr_str += "<tr data-id='" + list[i].id + "'>" +
+                    "<td class='cc'>" + list[i].password + "</td>" +
+                    "<td  class='cc'>" + list[i].email + " </td>" +
+                  "<td  class='cc'>&nbsp&nbsp<a  href='javascript:void(0)' onclick='showActivityBox(this)' >查看&nbsp&nbsp<a  href='javascript:void(0)' onclick='showNoticeUpdateBox(this)'  >修改&nbsp&nbsp<a  href='javascript:void(0);'  onclick='deleteItem(this)'>删除</td>" +
+                    "</tr>";
+
+            }
+            $("#user-list-table").html(tr_str);
+
+            // $("#user-list-page").pagination({
+            //     pageCount: data.pages,
+            //     current: data.page_num,
+            //     callback: 'pageselectCallback',
+            //     prevContent: "上一页",
+            //     nextContent: "下一页",
+            //     jump: true,
+            //     coping: true,
+            //     callback: function (api) {
+            //         getData(api.getCurrent())
+            //     }
+            // });
+        }
+
+
+
+        //查看
+        var activityXhr;
+        var updateTr;
+        function showActivityBox(item) {
+        $(".activity-box").show();
+
+         var tr=$(item).closest("tr");
+         update_tr=tr;
+
+        update_id = tr.data("id");
+        var id=$("input[name='id']").val();
+        var password=$("input[name='password']").val();
+        var email=$("input[name='email']").val();
+
+        
+        if (activityXhr) activityXhr.abort();
+            activityXhr = $.ajax({
+            url: "http://192.168.1.138:8080/api/user/show" + update_id,
+            type: "get",
+            data:'id='+id+'&password='+password+'&email='+email,
+            dataType: "json",
+            cache: false,
+            xhrFields: {
+               withCredentials: true
+          },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+            
+                if (result.code == 200) {
+
+                    updateTr = tr;
+                    
+                    var data = result.data;
+
+                     var dialog = $("#pjax-content");  
+                    dialog.find("input[name=id]").val(data.id);
+                    dialog.find("input[name=mobile_phone]").val(data.mobile_phone);
+                    dialog.find("input[name=password]").val(data.password);
+                    dialog.find("input[name=email]").val(data.email);      
+           }
+
+                   
+            },
+            error: function (result) {
+            		alert(result.msg);
+            }
+        });
+    } 
+
+//查看
+ </script>
+ 
+
+</html>

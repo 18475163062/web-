@@ -1,0 +1,27 @@
+<!DOCTYPE>
+<html >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JQ显示隐藏层，鼠标经过时出现文字链接</title>
+<style>.list span{display:none}</style>
+<<script src="jq/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+ $(".list li").hover(function(){
+  $(this).find("span").show();
+ },function(){
+  $(this).find("span").hide();
+ });
+});
+</script>
+</head>
+<body>
+<ul class="list">
+ <li><a href="#">文字链接</a>　<span><a href="#">好评</a> <a href="#">中评</a> <a href="#">差评</a></span></li>
+ <li><a href="#">文字链接</a>　<span><a href="#">好评</a> <a href="#">中评</a> <a href="#">差评</a></span></li>
+ <li><a href="#">文字链接</a>　<span><a href="#">好评</a> <a href="#">中评</a> <a href="#">差评</a></span></li>
+ <li><a href="#">文字链接</a>　<span><a href="#">好评</a> <a href="#">中评</a> <a href="#">差评</a></span></li>
+ <li><a href="#">文字链接</a>　<span><a href="#">好评</a> <a href="#">中评</a> <a href="#">差评</a></span></li>
+</ul>
+</body>
+</html>

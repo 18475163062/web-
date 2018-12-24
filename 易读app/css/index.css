@@ -1,0 +1,70 @@
+*{margin:0; padding:0}
+body{
+	margin: 0 auto;
+	text-align: center;
+	padding: 0px;
+	background: #fff;
+}
+#container{
+	text-align: left;
+	margin: 0 auto;
+	padding: 0px;
+	/*border: 1px solid #000;*/
+	width: 1100px;
+}
+.top{
+	letter-spacing:10px ;
+	background: #52adff;
+	font-size: 30px;
+	text-align: center;
+	line-height: 100px;
+	color: #fff;
+	font-size: 24px;
+	height: 100px;
+	width: 1100px;
+	text-align: center;
+}
+.xian{
+	width: 1100px;
+	/*border: 0.1px solid #000;*/
+}
+.panel-group{
+	width: 120px;
+}
+.panel-title a{
+	text-decoration: none;
+	list-style: none;
+	color: #000;
+	font-size: 20px;
+}
+a{
+	list-style: none;
+	text-decoration: none;
+}
+p{
+	cursor:pointer;
+	border-top: 1px solid #fff;
+	color: #fff;
+	padding-bottom: 10px; 
+	padding-top: 10px;
+}
+.l1 a{
+	color: #fff;
+}
+#left{
+	/*border-top: 1px solid #fff;*/
+	background: #52adff;
+	float: left;
+	width: 150px;
+	/*border: transparent;*/
+	/*border-right: 1px solid #000;
+	border-left: 2px solid #000;
+	border-bottom: 1px solid #000;*/
+	height: 800px;
+	
+}
+#nav{width:150px; text-align: center;}
+#nav b{ cursor:pointer; line-height:30px; height:30px; color:#fff ;border-bottom: 1px solid #fff}
+#color a{display:block; line-height:24px; font-size: 12px;line-height: 40px; color:#fff}
+#color a:hover{background-color:#eee; color:#000;}
+#nav div{display:none;}

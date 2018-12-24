@@ -1,0 +1,42 @@
+$(function(){
+	getData(1);
+});
+function getData(page_num){
+	var _data = "page_num=" + page_num + "&pagesize=10";
+	$.ajax({
+		url:"http://192.168.1.138:8080/api/category/list",
+		type:"get",
+		dataType:"json",
+		cache:false,
+		xhrFields:{
+			withCredentials:true
+		},
+		data:_data,
+		success:function(result){
+			if (result.code == 200) {
+				initData(result.data);
+			}
+		}
+	});
+}
+function initData(data){
+	var list = data.list;
+	 var tr_str = "";
+	// for (var i = 0; i < list.length; i++) {
+	// 	liStr += '<li class="lef1"  ><a href="#" onclick="showActivityUpdateBox(this)">' + list[i].name + '</a><ul>';
+	// 	liStr += '</ul></li>';
+	// }
+	 for (var i = 0; i < list.length; i++) {
+        tr_str += "<div id='le' data-category_id='" + list[i].id + "'>" +
+           "<ul>"+
+            "<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].name + "</a></li>" +   
+			"</ul>"+
+        "</div>";
+    }
+	$("#left1").html(tr_str);
+}
+
+function showActivityBox(item) {
+    window.location.href = "categoryById.html?category_id=" + $(item).closest("div").data("category_id");
+    return;
+}

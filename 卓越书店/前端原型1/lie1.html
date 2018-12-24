@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	 <script src="./jq/jquery-1.9.1.min.js"></script>
+	 <style>
+		.l1{
+			width: 250px;
+			height: 300px;
+		}
+		.l2{
+			width: 250px;
+			height: 300px;
+			border: 1px solid;
+		}
+		.l3{
+			width: 160px;
+			height: 30px;
+			border: 1px solid red;
+		
+			margin-top:-100px ;
+			margin-left: 320px;
+		}
+	 </style>
+</head>
+<body>
+<div id="left1"></div>
+<script>
+	var json =[{"img":"img/a.jpg","child":[{"title":"立即购买","url":"mai.html"},{"title":"添加通知","url":"lie1.html"},{"title":"12元","url":"lie1.html"},{"title":"hahahahahahah","url":""}]}];
+	$(function(){
+
+		var liStr ="<ul>" + "</ul>";
+		for (var i = 0; i < json.length; i++) {
+			liStr +="<ul class='l2'>"+
+			"<li><img src='" + json[i].img + "' class='l1'> </img></li>" +
+			
+			
+			"</ul>";
+
+			var child = json[i].child;
+			for (var x = 0; x < child.length; x++) {
+				
+				liStr +="<ul class='l3'>"+
+					"<li><a href='"+ child[x].url +"'>" + child[x].title +"</a></li>" +
+				"</ul>";
+			}
+		}
+		$("#left1").html(liStr);
+	});
+</script>
+	 
+</body>
+</html>

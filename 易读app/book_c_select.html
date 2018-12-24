@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+    <script src="jq/jquery.pagination.js"></script>
+    <style>
+    body{
+    	font-size: 14px;
+    	font-family: "微软雅黑";
+    }
+		.tu{
+			margin-left: -30px;
+			width: 150px;
+			height: 200px;
+		}
+		#buttom{
+			/*border: 1px solid red;*/
+			height: 220px;
+			width: 896px;
+		}
+		#buttom ul li{
+			
+			list-style: none;
+			text-decoration: none;
+		}
+		.left{
+			padding-left: -10px;
+			text-align: center;
+			height: 200px;
+			width: 130px;
+			float: left;
+			border: 1px solid red;
+		}
+		.right{
+			/*padding-left: -20px;*/
+			/*margin-left: -20px;*/
+			padding-right: 60px;
+			line-height: 20px;
+			text-align: left;
+			height: 200px;
+			width: 560px;
+			float: left;
+			border: 1px solid red; 
+		}
+		.white_content {
+
+			display: none;
+			position: absolute;
+			top: 5%;
+			left: 30%;
+			width: 40%;
+			height: 50%;
+			border: 1px solid  #52adff;
+			background-color: white;
+			z-index:1002;
+			/*overflow: auto;*/
+		}
+		#tianjiade{
+			margin-left: 80px;
+			width: 300px;
+			/*border: 1px solid red;*/
+			text-align: left;
+		}
+		.jian{
+			padding-right: 28px;
+		}
+		.jian1{
+			padding-right: 39px;
+		}
+		.jian2{
+			padding-right: 20px;
+		}
+		.jian3{
+			padding-right: 14px;
+		}
+    </style>
+    <script>
+    	function getQueryVariable(variable) {
+    	var query = window.location.search.substring(1);
+    	var vars = query.split("&");
+    	for (var i = 0; i < vars.length; i++) {
+       		var pair = vars[i].split("=");
+        	if (pair[0] == variable) return pair[1];
+    		}
+		}
+		$(function () {
+    	showActivityBox(getQueryVariable("category_id"));
+	});
+		
+		function showActivityBox(category_id, page_num) {
+			var _data = "page_num =" + page_num + "&page_size=";
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/Book/select?category_id=" + category_id,
+				type: "get",
+        		dataType: "json",
+        		cache: false,
+        		xhrFields: {
+           		   withCredentials: true
+        		},
+        		beforeSend: function () {},
+        		complete: function () {},
+        		data: _data,
+        		success: function (result) {
+           			 if (result.code == 200) {
+           		     initData(result.data);
+          		   }
+       			}
+			});
+		}
+	// }
+		function initData(data){
+			var list =data.list;
+			var tr_str="";
+			for (var i = 0; i < list.length; i++) {
+					tr_str +="<div  id='buttom' data-book_id='" + list[i].book_id + "'  data-bookname='"+ list[i].bookname +"'>"+
+							// "<li><input type='checkbox' name='checks'   id='allChecksn' ></li>"+
+							"<ul class='left'>"+
+
+								"<li><img onclick='showActivityBo(this)' src='"+ "http://118.89.41.29:8080" + list[i].pic_url +"' class='tu'></img></li>"+
+							"</ul>"+
+							"<ul class='right'>"+
+								"<li>"+ list[i].book_category.name +"</li>"+
+								"<li>"+ list[i].bookname +"&nbsp / &nbsp"+ list[i].author+ "&nbsp / &nbsp"+list[i].press +"&nbsp / &nbsp"+list[i].press_date + "&nbsp / &nbsp"+ "￥"+list[i].price+"元" +"</li>"+
+								"<li>"+ list[i].mount +"</li>"+
+								"<li>"+ list[i].bookcontent +"</li>"+
+							"</ul>"+
+							"<ul>"+"<a href='#' onclick='deleteItem(this)'>删除</a>" +"<br>" +"<a href='#' onclick='showActivityUpdateBox(this)'>修改</a>"+
+							 
+							"</ul>"+
+					"</div>";
+			}
+			$("#container").html(tr_str);
+		}
+    </script>
+
+    <!-- 删除 -->
+    <script>
+		function deleteItem(item) {
+			if (confirm("确定要删除吗？")) {
+				var book_id = $(item).closest("div").data("book_id");
+				var data = "";
+				data += "book_id=" + book_id;
+				$.ajax({
+					url: 'http://118.89.41.29:8080/api/Book/deleteById',
+					type: "post",
+					dataType: "json",
+					cache: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					 beforeSend: function () {},
+					 complete: function () {},
+					data: data,
+					success: function (result) {
+						if (result.code == 200) {
+							alert(result.msg);
+							var tr = $(item).closest("div");
+							tr.remove();
+						}
+
+					}
+
+				});
+			}
+		}
+	</script>
+
+	<!-- 修改 -->
+	<script>
+		var activityXhr;
+    	var updateTr;
+    	function showActivityUpdateBox(item) {
+    	$(".activity-update-box").show();
+         var div=$(item).closest("div");
+        book_id = div.data("book_id");
+        if (activityXhr) activityXhr.abort();
+        	activityXhr = $.ajax({
+            url:"http://118.89.41.29:8080/api/Book/selectById?book_id=" + book_id,
+            type: "get",
+            dataType: "json",
+            cache: false,
+            xhrFields: {
+               withCredentials: true
+          },
+            
+            success: function (result) {
+					if (result.code == 200) {
+						var data = result.data;
+						 var div = $("#subject-update");
+			                div.find("input[name=book_id]").val(data.book_id);
+			                div.find("input[name=isbn]").val(data.isbn);
+			                div.find("input[name=category_id]").val(data.category_id);
+			                div.find("input[name=bookname]").val(data.bookname);
+			                div.find("input[name=author]").val(data.author);
+			                div.find("input[name=press]").val(data.press);
+			                div.find("input[name=press_date]").val(data.press_date);
+			                div.find("input[name=multipartFile]").val(data.multipartFile);
+			                div.find("input[name=mount]").val(data.mount);
+			                div.find("input[name=bookcontent]").val(data.bookcontent);
+					}
+				},
+        });
+    }
+
+    function activityUpdate() {
+        if (activityXhr) activityXhr.abort();
+        activityXhr = $.ajax({
+            url: "http://118.89.41.29:8080/api/Book/updateById",
+            type: "post",
+            data: new FormData($("#subject-update-form")[0]),
+            dataType: "json",
+            cache: false, // 上传文件无需缓存
+            processData: false, // 用于对data参数进行序列化处理 这里必须false
+            contentType: false, // 必须
+            async : true,
+            cache: false,//清除缓存
+            xhrFields: {//跨域
+               withCredentials: true
+          },
+            success: function (result) {
+                if (result.code == 200) {
+                	alert(result.msg);
+                	// self.location="index.html";  
+                	window.location.href=document.referrer; 
+                    var dialog = $("#activity-update-dialog");
+                updateTr.children("#book_id").text(dialog.find("input[name=book_id]").val());
+                updateTr.children("#ISBN").text(dialog.find("input[name=ISBN]").val());
+                updateTr.children("#category_id").text(dialog.find("input[name=category_id]").val());
+                updateTr.children("#bookname").text(dialog.find("input[name=bookname]").val());
+                updateTr.children("#author").text(dialog.find("input[name=author]").val());
+                updateTr.children("#press").text(dialog.find("input[name=press]").val());
+                updateTr.children("#pressDate").text(dialog.find("input[name=pressDate]").val());
+                updateTr.children("#multipartFile").text(dialog.find("input[name=multipartFile]").val());
+                updateTr.children("#mount").text(dialog.find("input[name=mount]").val());
+                updateTr.children("#bookcontent").text(dialog.find("input[name=bookcontent]").val());
+
+                } else {
+                    
+                }
+            },error: function (result) {
+
+            }
+        });
+    }
+	</script>
+
+    <script>
+    function showActivityBo(item) {
+    window.location.href = "book_c_selectByid.html?book_id=" + $(item).closest("div").data("book_id");
+    }
+    </script>
+
+
+    <!-- 下拉菜单 -->
+    <script>
+		$(function(){
+			getData(1);
+		});
+		function getData(page_num){
+			var _data = "page_num=" + page_num + "&page_size=9";
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/bookcategory/list",
+				type:"get",
+				dataType:"json",
+				cache:false,
+				xhrFields:{
+					withCredentials:true
+				},
+				data:_data,
+				success:function(result){
+					if (result.code ==200) {
+						initDat(result.data);
+					}
+				}
+			})
+		}
+
+		function initDat(data){
+			var list = data.list;
+			var tr_str="";
+			$("#main_id").empty();
+          	$("#main_id").append("<option value=''>请选择主类</option>");
+			for (var i = 0; i < list.length; i++) {
+				tr_str += 
+					// "<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].name +"</a></li>";
+					 $("#main_id").append('<option value='+list[i].category_id+'>' + list[i].name + list[i].category_id +'</option>');
+			}
+			// $("#top").html(tr_str);
+		}
+	</script>
+	
+	<!-- 批量删除 -->
+	<!--  <script>
+            function chAll() {
+                var flag = document.getElementById('allChecksn').checked;
+                var cks = document.getElementsByName('checks');
+                for (var i = 0; i < cks.length; i++) {
+                    cks[i].checked = flag;
+                }
+            }
+            function deleteAll(item) {
+                var checkedNum = $("input[name='checks']:checked").length;
+                if (checkedNum == 0) {
+                    alert("请选择至少一项！");
+                    return;
+                }
+                if (confirm("确定要删除所选项目？")) {
+                    var checkedList = new Array();
+                    var book_id = $(item).closest("div").data("book_id");
+                    var data = "";
+                    data += "book_id=" + book_id;
+                    $("input[name='checks']:checked").each(function () {
+                        checkedList.push($(this).val());
+                    });
+                    $.ajax({
+                        type: "post",
+                        url: "http://192.168.1.185:8083/api/Book/deleteById",
+                        data: {
+                            'delitems': checkedList.toString()
+                    },
+                    success: function (result) {
+                        $("[name='checks']:checkbox").attr("checked", false);
+                        window.location.reload();
+                    }
+                })
+            }
+        }
+    </script>
+ -->
+    <!-- 弹出框 -->
+	<script type="text/javascript">
+		//弹出隐藏层
+		function ShowDiv(show_div,bg_div){
+		document.getElementById(show_div).style.display='block';
+		document.getElementById(bg_div).style.display='block' ;
+		var bgdiv = document.getElementById(bg_div);
+		bgdiv.style.width = document.body.scrollWidth;
+		// bgdiv.style.height = $(document).height();
+		$("#"+bg_div).height($(document).height());
+		};
+		//关闭弹出层
+		function CloseDiv(show_div,bg_div)
+		{
+		document.getElementById(show_div).style.display='none';
+		document.getElementById(bg_div).style.display='none';
+		};
+	</script>
+	<script>
+
+		function tijiao(){
+			var formData = new FormData($("#tianjia")[0]); 
+			$.ajax({ 
+			    url: 'http://118.89.41.29:8080/api/Book/add', 
+			    type: 'POST', 
+			    data: formData, 
+			    async: false, 
+			    contentType: false, 
+			    processData: false, 
+			    cache:false,//去掉缓存
+				xhrFields:{
+					withCredentials:true
+				},
+			    success: function(data) {
+			        if (data.code ==200) {
+						alert(data.msg);
+					}else{
+						alert(data.msg);
+					}
+			     }, 
+			     error:function(){
+							alert("网络连接错误");
+				}
+		    }); 
+		}
+	</script>
+
+	<!-- 搜索 -->
+	<script>
+		function sousuo(){
+			$(".activity-update-boxx").show();
+		$.ajax({
+			type:'get',
+			url:'http://118.89.41.29:8080/api/Book/selectBook',
+			data:$("#sou").serialize(),
+			dataType:"json",
+			cache:false,
+			xhrFields: {
+                withCredentials: true
+            },
+            success:function(result){
+            	if (result.code == 200) {
+            		initDate(result.data);
+            	}
+            }
+		})
+	}
+	function initDate(data){
+			var listt = data.list;
+			var tr_str="";
+			for (var i = 0; i < listt.length; i++) {
+				tr_str += "<div id='top' data-category_id='"+listt[i].category_id+"'>"+
+					
+						"<ul id='top1'>"+
+							"<li ><a href='#' onclick='showActivityBox(this)'>" + listt[i].bookname +"</a></li>"+
+						"</ul>"+
+					
+				"</div>";
+			}
+			$("#button").html(tr_str);
+		}
+	</script>
+</head>
+<body>
+	<div class="activity-update-box" style="background: #f1f1fc;  position: fixed; width: 100%; height:100%; margin:0px; padding:0px; z-index: 900; display: none;" >
+		<div id="activity-update-dialog" >
+			<div id="subject-update">
+			     <h3>信息修改</h3>
+			     <form id="subject-update-form">
+			         <table>
+			            <tr>
+			                <td>主键：</td>
+			                <td>
+			                    <input autocomplete="off" name="book_id" value="" type="text">
+			            </td>
+			            
+			            <tr>
+			                <td>isbn：</td>
+			                <td>
+			                    <input autocomplete="off" name="isbn" value="" type="text">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>外键：</td>
+			                <td>
+			                    <input autocomplete="off" name="category_id" value="" type="text">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>书名：</td>
+			                <td>
+			                    <input autocomplete="off" name="bookname" value="" type="text">
+			                </td>
+			            </tr>
+
+			            <tr>
+			                <td>作者：</td>
+			                <td>
+			                    <input autocomplete="off" name="author" value="" type="text">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>出版社：</td>
+			                <td>
+			                    <input autocomplete="off" name="press" value="" type="text">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>出版时间：</td>
+			                <td>
+			                    <input autocomplete="off" name="pressDate" value="" type="date">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>上传图片：</td>
+			                <td>
+			                    <input autocomplete="off" name="multipartFile" value="" type="file">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>库存：</td>
+			                <td>
+			                    <input autocomplete="off" name="mount" value="" type="text">
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>图书简介：</td>
+			                <td>
+			                    <input autocomplete="off" name="bookcontent" value="" type="text">
+			                </td>
+			            </tr>
+
+			         </table>
+			         <input value="修改" onclick="activityUpdate()" type="button" class="revise"><input type="button" value="取消" id="btn2" onclick="$(this).closest('.activity-update-box').hide();" />
+			   </form>
+			</div>
+		</div>
+	</div>
+
+	<div style="width: 800px;text-align: center;">
+			<div cursor:pointer; style="text-align: right;"><input  type="button" value="增  加" style="color: #fff;background: #52adff;font-size: 12px;"  onclick="ShowDiv('MyDiv')" /></div>
+				<div id="MyDiv" class="white_content">
+					<div style="text-align: right; cursor: default; height: 40px;" id="move">
+						<input type="button" value="关闭" style="color: #fff;background: #52adff;font-size: 12px;"  onclick="CloseDiv('MyDiv')">
+					</div>
+					<div id="tianjiade">
+						<form id="tianjia" enctype="multipart/form-data">
+							<span class="jian2">ISBN：</span> <input type="text" name="ISBN"><br>
+
+							<span class="jian1">外键:</span><select name="category_id" id="main_id" >
+							  		<option value="">请选择主类</option>
+								</select><br>
+							<span class="jian">书名：</span><input type="text" name="bookname"><br>
+							<span class="jian">作者：</span><input type="text" name="author"><br>
+							<span>作者简介：</span><input type="text" name="author_introduction"><br>
+							<span>出版时间：</span><input type="date" name="pressDate"><br>
+							<span class="jian3">出版社：</span><input type="data" name="press"><br>
+							<span class="jian">页数：</span><input type="data" name="page"><br>
+							<span class="jian">价格：</span><input type="data" name="price"><br>
+							<span class="jian">图片：</span><input type="file" name="multipartFile"><br>
+							<span class="jian">库存：</span><input type="text" name="mount"><br>
+							<span>图书简介：</span><input type="text" name="bookcontent"><br>
+							<input type="button" onclick="tijiao()" value="提交">
+							<input type="reset" value="重置" >
+						</form>
+						<!-- <form id="tianjia" enctype="multipart/form-data">					
+							名字：<input type="text" name="name"><br>
+							图片：<input type="file" name="multipartFile"><br>
+							<input type="button" onclick="tijiao()" value="提交"><input type="reset" value="重置">
+						</form> -->
+					</div>
+				</div>
+		</div>
+		<div>
+
+			
+
+			<!-- 搜索 -->
+		    <div>
+		    	<form enctype="multipart/form-data" id="sou">
+					<input type="text" placeholder="请输入书名" name="bookname"><input type="button"  onclick="sousuo()" value="搜索">
+		    	</form>
+		    </div>
+		    
+		    <div class="activity-update-boxx" style="background: #f1f1fc;  position: fixed; width: 100%; height:100%; margin:0px; padding:0px; z-index: 900; display: none;" >
+				<div id="activity-update-dialog" >
+					<div id="subject-update">
+					     <div id="button"></div>
+					</div>
+				</div>
+			</div>
+		<!-- 	<input type='checkbox' onclick='chAll()' id='allChecksn' name='check'>全选
+		        <a href='javascript:void(0);' onclick="deleteAll(this)">删除</a> -->
+			<div id="container">
+
+				
+			</div>
+			<div align="center" style="clear: both;" >
+		            <!-- <div class="M-box"></div> -->
+		            <a href="book_select.html">返回</a>
+		    </div>
+
+        </div>
+</body>
+</html>

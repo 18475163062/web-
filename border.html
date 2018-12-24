@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!-- saved from url=(0037)http://192.168.1.137:8089/record/list -->
+<html lang="en" class="">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>阳江教育科研课题动态管理系统</title>
+    <link rel="stylesheet" href="./阳江教育科研课题动态管理系统_files/main.css" type="text/css">
+<script src="./阳江教育科研课题动态管理系统_files/main.js.下载"></script>    <style type="text/css">
+        html,body { height: 100%; margin: 0; padding: 0; }
+        a {
+            text-decoration:none;
+        }
+        table td {word-break: keep-all;white-space:nowrap;}
+        .shadow {
+            -webkit-box-shadow: #666 0px 0px 10px;
+            -moz-box-shadow: #666 0px 0px 10px;
+            box-shadow: #666 0px 0px 10px;
+        }
+        .page-box a {
+            min-width: 15px;
+            color: black;
+            text-align: center;
+            background: white;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 0 2px;
+            display: inline-block;
+        }
+        .page-box span {
+            min-width: 15px;
+            text-align: center;
+            border: 1px solid transparent;
+            padding: 5px 10px;
+            margin: 0 2px;
+            display: inline-block;
+        }
+        .page-box .active {
+            color: white;
+            background: #a0a0a0;
+            border-radius: 5px;
+
+        }
+    </style>
+    <script src="./阳江教育科研课题动态管理系统_files/jquery-1.12.4.min.js.下载"></script>
+    <script src="./阳江教育科研课题动态管理系统_files/jquery.form-3.46.0.js.下载"></script>
+    <script src="./阳江教育科研课题动态管理系统_files/security.js.下载"></script>
+    <script src="./阳江教育科研课题动态管理系统_files/jquery.pjax.js.下载"></script>
+    <script src="./阳江教育科研课题动态管理系统_files/jquery-pagination-zhuoyue-0.1.0.js.下载"></script>
+    <link ref="stylesheet" href="http://192.168.1.137:8089/css/jquery.fancybox-2.1.7.css">
+    <script src="./阳江教育科研课题动态管理系统_files/jquery.fancybox.pack-2.1.7.js.下载"></script>
+    <script src="./阳江教育科研课题动态管理系统_files/JTimer_1.3.js.下载"></script>
+    <script type="text/javascript">
+        $(function () {
+            var pathname = window.location.pathname;
+            var menus = $("#left-menu a");
+            for (var x = 0; x < menus.length; x++) {
+                if (menus.eq(x).data("url").replace(/\?.*/g,'') == pathname) {
+                    menus.eq(x).addClass("selected");
+                    break;
+                }
+            }
+        });
+
+        function openPage(item) {
+            openUrl($(item).data("url"));
+        }
+
+        function openUrl(url) {
+            // $.pjax({url: url, container: '#pjax-container'});
+            window.location.href = url;
+        }
+
+        function initPage(item, data, func) {
+            if (data.pages > 1) {
+                item.show();
+                item.pagination({
+                    current: data.page_num,
+                    pageCount: data.pages,
+                    count: 2,
+                    jump: true,
+                    coping: true,
+                    prevContent: '上页',
+                    nextContent: '下一页',
+                    callback: function (api) {
+                        func(api.getCurrent());
+                    }
+                });
+            } else {
+                item.hide();
+            }
+        }
+
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) return pair[1];
+            }
+        }
+
+        function val(a) {
+            if (typeof(a) === "undefined" || a == null) return "";
+            return a;
+        }
+
+        function formatDate(date) {
+            var reg = /^(\d{4})\D*(\d{2})\D*(\d{2})/g;
+            date.replace(reg,function(rs,$1,$2,$3){
+                date = $1 + "-" + $2 + "-" + $3;
+            });
+            return date;
+        }
+
+        function selectMenu(item) {
+            $("#left-menu a").removeClass("selected");
+            $(item).addClass("selected");
+            openPage(item);
+        }
+    </script>
+<style type="text/css">.fancybox-margin{margin-right:0px;}</style></head>
+<body>
+<div style="position: absolute; width: 100%; background: #e0e0e0; z-index: 100;">
+    <div style="padding: 5px 10px; position: relative;">
+        <p>阳江教育科研课题动态管理系统</p>
+        <div style="position: absolute; bottom: 0; right: 10px;">
+            <p>欢迎您，<span id="curentuser-realname" style="color: #808080;">0</span> 老师</p>
+        </div>
+    </div>
+</div>
+
+<div style="height: 100%; margin-left: 171px; position: relative; z-index: 10; overflow:auto;">
+    <div id="pjax-container" style="padding-top: 60px;">
+    <p class="title">备案列表</p>
+    <table id="record-list-table" class="list-table" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+        <tr>
+            <th>课题名称</th>
+            <th>课题类别</th>
+            <th>支持人</th>
+            <th>年度</th>
+            <th>开题报告</th>
+            <th>中期报告</th>
+            <th>结题报告</th>
+        </tr>
+        <tr data-id="63">
+            <td class="name">1</td>
+            <td class="classification">1</td>
+            <td class="host">1</td>
+            <td class="year">0001</td>
+            <td>未提交</td>
+            <td>未提交</td>
+            <td>未提交</td>
+        </tr>
+        <tr data-id="62">
+            <td class="name">fdfd</td>
+            <td class="classification">fdsfds</td>
+            <td class="host">dsfdf</td>
+            <td class="year">2018</td>
+            <td>未提交</td>
+            <td>未提交</td>
+            <td>未提交</td>
+        </tr>
+        <tr data-id="61">
+            <td class="name">ewr</td>
+            <td class="classification">sdfsdf</td>
+            <td class="host">dsfds</td>
+            <td class="year">2016</td>
+            <td>已提交</td>
+            <td>未提交</td>
+            <td>未提交</td>
+        </tr>
+        <tr data-id="60">
+            <td class="name">名称</td>
+            <td class="classification">类别</td>
+            <td class="host">支持人</td>
+            <td class="year">2018</td>
+            <td>已提交</td>
+            <td>已提交</td>
+            <td>已提交</td>
+        </tr>
+        <tr data-id="59">
+            <td class="name">课题</td>
+            <td class="classification">类别</td>
+            <td class="host">支持人</td>
+            <td class="year">2018</td>
+            <td>未提交</td>
+            <td>未提交</td>
+            <td>未提交</td>
+        </tr>
+        <tr data-id="58">
+            <td class="name">测试用户</td>
+            <td class="classification">1</td>
+            <td class="host">1</td>
+            <td class="year">2018</td>
+            <td>已提交</td><td>已提交</td>
+            <td>已提交</td>
+        </tr>
+        <tr data-id="57">
+            <td class="name">测试用户</td>
+            <td class="classification">1</td>
+            <td class="host">1</td>
+            <td class="year">2018</td>
+            <td>已提交</td>
+            <td>已提交</td>
+            <td>已提交</td>
+        </tr>
+        <tr data-id="55">
+            <td class="name">游客36120391</td>
+            <td class="classification">1</td>
+            <td class="host">1</td>
+            <td class="year">0001</td>
+            <td>已提交</td>
+            <td>已提交</td>
+            <td>已提交</td>
+        </tr>
+        <tr data-id="54">
+            <td class="name">游客36120391</td>
+            <td class="classification">1</td>
+            <td class="host">1</td>
+            <td class="year">0001</td>
+            <td>已提交</td>
+            <td>已提交</td>
+            <td>已提交</td>
+        </tr>
+        <tr data-id="53"><td class="name">传参</td>
+            <td class="classification">1</td>
+            <td class="host">11</td>
+            <td class="year">2018</td>
+            <td>已提交</td><td>已提交</td>
+            <td>已提交</td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="record-list-page" class="page-box">
+    <span class="active">1</span>
+    <a href="javascript:;" data-page="2">2</a>
+    <a href="javascript:;" data-page="3">3</a>
+    <span>...</span>
+    <a href="javascript:;" data-page="6">6</a>
+    <a href="javascript:;" class="next">下一页</a>
+    <input type="text" class="jump-ipt">
+    <a href="javascript:;" class="jump-btn">跳转</a></div>
+<script type="text/javascript">
+    $(function () {
+        getRecordList(1);
+    });
+
+    var recordListXhr;
+    function getRecordList(pageNum) {
+        if (recordListXhr) recordListXhr.abort();
+        recordListXhr = $.ajax({
+            url: "/api/record/list",
+            type: "get",
+            data: "page_num=" + pageNum,
+            dataType: "json",
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    var data = result.data;
+                    var list = data.list;
+
+                    var tr = "";
+                    for (x in list) {
+                        tr += '<tr data-id="' + list[x].id + '">'
+                            + '<td class="name">' + list[x].name + '</td>'
+                            + '<td class="classification">' + list[x].classification + '</td>'
+                            + '<td class="host">' + list[x].host + '</td>'
+                            + '<td class="year">' + list[x].year + '</td>'
+                            + '<td>' + initReportStr(list[x].thesis_proposal) + '</td>'
+                            + '<td>' + initReportStr(list[x].medium_report) + '</td>'
+                            + '<td>' + initReportStr(list[x].final_report) + '</td>'
+                            + '</tr>';
+                    }
+
+                    var headTr = '<tr>'
+                        + '<th>课题名称</th>'
+                        + '<th>课题类别</th>'
+                        + '<th>支持人</th>'
+                        + '<th>年度</th>'
+                        + '<th>开题报告</th>'
+                        + '<th>中期报告</th>'
+                        + '<th>结题报告</th>'
+                        + '</tr>';
+                    $("#record-list-table").html(headTr + tr);
+
+                    initPage($("#record-list-page"), data, getRecordList);
+                }
+            },error: function (result) {
+
+            }
+        });
+    }
+
+    function initReportStr(report) {
+        return report ? "已提交" : "未提交";
+    }
+</script>    
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<script>
+function requestjson(){
+	$.ajax({
+		type:"post",
+		url:"http://192.168.1.138:8080/api/review/add",
+		data:$("#tianjia").serialize(),
+		dataType:"json",
+		cache:false,
+		xhrFields:{
+			withCredentials:true
+		},
+		success:function(result){
+			if (result.code==200) {
+				alert(result.msg);
+			}else{
+            		// alert(result.msg);
+            }
+		},
+		  error: function() {
+				alert("网络连接出错");
+			}
+	});
+}
+</script>
+	<div>
+		<form action="" id="tianjia" enctype="multipart/form-data">
+			<p>评价内容：<input type="text" name="content" autocomplete="off"></p>
+			<p>用户外键：<input type="text" name="userId" value="1" autocomplete="off"></p>
+			<p>产品外键：<input type="text" name="productId" value="7" autocomplete="off"></p>
+			<input type="button" value="提交" onclick="requestjson()"><input type="reset">
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="css/category.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <title>分类管理</title>
+</head>
+
+<body>
+  <div id="wrap">
+    <div id="top">
+      <div class="title">分类管理</div>
+      <div class="tools">
+        <ul>
+          <li><a href="categoryAdd.html"><span>新增</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <table id="table">
+        <thead>
+          <tr>
+            <th><span>主键</span></th>
+            <th><span>名称</span></th>
+            <th>
+              <a href="javascript:void"><span>查看</span></a></th>
+            <th>
+              <a href="javascript:void"><span>修改</span></a></th>
+            <th>
+              <a href="javascript:void"><span>删除</span></a>
+            </th>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="page">
+      <!-- 页码 -->
+    </div>
+  </div>
+
+  <script>
+    $(function () {
+      getData(1)
+    })
+
+    function getData(page_num) {
+      $.ajax({
+        url: 'http://192.168.1.138:8080/api/category/list',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        timeout: 1500,
+        success: function (data) {
+          console.log(data.data)
+          if (data.code === 200) {
+            let list = data.data.list
+            console.log(list)
+            $.each(list, function (index, item) {
+              let tr = '<tr category_id="' + item.id + '"><td>' + item.id + '</td><td>' + item.name + '</td>' +
+                '<td><a href="javascript:void(0)" onclick="showItem(' + item.id + ')" class="show"><span>查看</span></a></td>' +
+                '<td><a href="javascript:void(0)" onclick="modifyItem(' + item.id + ')" class="modify"><span>修改</span></a></td>' +
+                '<td><a href="javascript:void(0)" onclick="deleteItem(' + item.id + ')" class="delete"><span>删除</span></a></td>' +
+                '</tr>'
+              $('#table').append(tr)
+            })
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          let getError = '获取失败，请修改再测试'
+          window.alert(getError)
+          console.log(XMLHttpRequest.status); //状态码
+          console.log(XMLHttpRequest.readyState); //状态
+          console.log(textStatus); //错误信息
+        }
+      })
+    }
+
+    function deleteItem(category_id) {
+      if (confirm('确定删除吗？')) {
+        $.ajax({
+          url: 'http://192.168.1.138:8080/api/category/delete',
+          type: 'post',
+          cache: false,
+          timeout: 1000,
+          success: function deleteSuccess(category_id) {
+            $(category_id).remove()
+            // getData(page_num)
+            console.log('删除成功')
+          },
+          error: function (XMLHttpRequest, textStatus, errorThrown) {
+            let deleteError = '删除失败，请修改再测试'
+            window.alert(deleteError)
+            console.log(XMLHttpRequest.status); //状态码
+            console.log(XMLHttpRequest.readyState); //状态
+            console.log(textStatus); //错误信息
+          }
+        })
+      }
+    }
+  </script>
+</body>
+
+</html>

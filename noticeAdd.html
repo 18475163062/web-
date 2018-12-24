@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加通知</title>
+    <style>
+    body {
+      margin: 0px;
+      padding: 0px;
+      text-align: center;
+    }
+    #notice-add-form {
+      position: relative;
+            padding-top: 20px;
+            text-align: left;
+            margin: auto;
+            background: #f1f1fc;
+            width: 1100px;
+            height: 665px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+    }
+    </style>
+</head>
+<body>
+<form id="notice-add-form">
+    <table  border="1" width="1100">
+        <tr>
+            <td align="right">主题：</td>
+            <td><input type="text" name="theme" autocomplete="off"><label><input type="hidden" name="top" value="false">
+            <input class="top" type="checkbox" onclick="$(this).siblings('input[name=top]').val(($(this).prop('checked') ? 'true' : 'false'));">
+            置顶</label></td>
+        </tr>
+        <tr>
+            <td align="right">作者：</td>
+            <td><input type="text" name="host" autocomplete="off"></td>
+        </tr>
+        <tr>
+            <td align="right">附件：</td>
+            <td><input type="file" name="file" ></td>
+        </tr>
+        <tr>
+            <td align="right">内容：</td>
+            <td><textarea name="content"></textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" value="提交" onclick="noticeAdd()">&nbsp;
+        <input type="reset" value="重置">&nbsp;<input type="button" onclick="cancleUploadFile()" value="返回" /></td>
+        </tr>
+    </table>
+</form>
+
+
+ <script  src="./js/jquery-1.9.1.min.js"></script> 
+ <script src="./js/noticeadd.js"></script>
+
+</body>
+</html>

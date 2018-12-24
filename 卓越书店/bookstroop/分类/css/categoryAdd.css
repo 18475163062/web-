@@ -1,0 +1,37 @@
+body {
+  margin: 0 auto;
+  text-align: center;
+}
+
+ul, li {
+  list-style: none;
+  padding: 5px;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  height: 20px;
+  width: 25px;
+  margin: 3px;
+  padding: 3px;
+  border: 1px solid #f2ecde;
+  border-radius: 10px;
+}
+
+#categoryAdd {
+  width: 300px;
+  height: 200px;
+  background-color: #9ed048;
+  border: solid 5px #21a675;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  opacity: 0.9;
+}
+
+#categoryAdd #categoryAddMain {
+  background-color: #bce672;
+}
+

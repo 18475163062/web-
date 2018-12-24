@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script>
+	function requestjson(){
+		$.ajax({
+			type:'post',
+			url:'http://192.168.1.137:8089/api/record/add',
+		
+			data:$("#tianjia").serialize(),
+			dataType:"json",
+			cache: false,
+            xhrFields: {
+                withCredentials: true
+            },
+			success:function(result){
+				if (result.code == 200) {
+					window.location.href = "beianketiliebiao.html";
+				} else {
+					alert(result.msg);
+				}
+			},
+			error: function() {
+				alert("网络连接出错");
+			}
+		});
+	}
+	</script>
+	<style>
+		body{
+		margin: 0px ;
+		padding:0px;
+		text-align:center;
+	}
+		#container{
+			position: relative;
+			padding-top: 20px;
+			text-align: left;
+			margin: auto;
+			background: #f1f1fc;
+			width: 1100px;
+			height: 665px;
+			font-size: 14px;
+			font-family: "微软雅黑";
+		}
+		.l1{
+			width: 500px;
+		}
+		#div1{
+			position: absolute;
+			top: 175px;
+			left: 200px;
+			width: 400px;
+			height: 80px;
+			border: 1px solid red;
+			background: pink;
+		}
+	</style>
+
+
+</head>
+<body>
+	<div id="container">
+		<form action=""  id="tianjia" enctype="multipart/form-data">
+			<table width="1100px" border="1"  align="center">
+				<tr>
+					<td colspan="4">添加课题</td>
+				</tr>
+				<tr align="center">
+					<td align="right">课题名称：</td>
+					<td align="left"><input type="text" name="name" autocomplete="off"></td>
+					<td align="right">立项年度：</td>
+					<td align="left"><input type="text" name="year" autocomplete="off"></td>
+				</tr>
+				<tr align="center">
+					<td align="right">主持人名字：</td>
+					<td align="left"><input type="text" name="host" autocomplete="off"></td>
+					<td align="right">主持人单位：</td>
+					<td align="left"><input type="text"  name="unit" autocomplete="off"></td>
+				</tr>
+				<tr align="center">
+					<td align="right">立项编号：</td>
+					<td align="left"><input type="text" name="pronum" autocomplete="off"></td>
+					<td align="right">立项文号：</td>
+					<td align="left"><input type="text" name="filenum" autocomplete="off"></td>
+				</tr>
+				<tr align="center">
+					<td align="right">所属学科：</td>
+					<td align="left"><input type="text" name="subject" autocomplete="off"></td>
+					<td align="right">课题类别：</td>
+					<td align="left"><input type="text" name="classification" autocomplete="off"></td>
+				</tr>
+				<tr align="center">
+					<td align="right">开题报告：</td>
+					<td colspan="3"  align="left"><input type="file" class="l1" value="无" name="thesis_proposal"><!-- &nbsp; --><!-- <input id="show" type="button" value="添加"> --></td>
+				</tr>
+				<tr align="center">
+					<td align="right">中期报告：</td>
+					<td colspan="3"  align="left"><input type="file" class="l1" value="无" name="medium_report"><!-- &nbsp;<input type="button" value="添加"> --></td>
+				</tr>
+				<tr align="center">
+					<td align="right">结题报告：</td>
+					<td colspan="3"  align="left"><input type="file" class="l1" value="无" name="final_report"><!-- &nbsp;<input type="button" value="添加"> --></td>
+				</tr>
+				<tr align="center">
+					<td colspan="4"><input onclick="requestjson()" type="button" value="提交">&nbsp;<input type="reset" >&nbsp;<input type="button" value="返回"></td>
+				</tr>
+			</table>
+		<!-- 	<div id="div1">
+				<p><button id="hide" type="button">关闭</button></p>
+				
+				<input type="file" name="">
+				<input type="submit">
+				
+			</div> -->
+		</form>
+	</div>
+	
+	<!-- <script type="text/javascript">
+		$(document).ready(function(){
+			$("#hide").click(function(){
+				$("#div1").hide();
+			});
+			$("#show").click(function(){
+				$("#div1").show();
+			});
+		});
+	</script> -->
+</body>
+</html>

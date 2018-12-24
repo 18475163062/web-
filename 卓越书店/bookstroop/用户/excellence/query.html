@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+	<title>查看产品</title>
+	<link rel="stylesheet" href="css/query.css">
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/jquery.pagination.js"></script>
+</head>
+<body>
+	<!-- 分页查询 -->
+	<script>
+		$(function(){
+			getData(1);
+		});
+		function getData(page_num){
+			var _data = "page_num+=" + page_num + "&page_size=10";
+			$.ajax({
+				url:"http://192.168.1.138:8080/api/propertyValue/list",
+				type:"get",
+				dataType:"json",
+				cache:false,//去掉缓存
+				xhrFields:{
+					withCredentials:true
+				},
+				data:_data,
+				success: function (result) {
+					if (result.code == 200) {
+						initData(result.data);
+					}
+				}
+			});
+		}
+		function initData(data){
+			var list = data.list;
+			var tr_str = "<tr >" + 
+				
+				"<th class='t'>value</th>"+
+				"<th class='t'>product_id</th>"+
+				"<th class='t'>property_id</th>"+
+				"<th class='t'>查看</th>"+
+				"<th class='t'>修改</th>"+
+				"<th class='t'>删除</th>"+
+
+				"</tr>";
+				for (var i = 0; i < list.length; i++) {
+				tr_str += "<tr  data-id='"+list[i].id+"'>" +		
+					"<td >" + list[i].value + "</td>" +
+					"<td >" + list[i].product_id + "</td>" +
+					"<td >" + list[i].property_id + "</td>" +
+					"<td ><a href='#'>查看</a></td>" + 
+					"<td><a  href='#' onclick='showActivityUpdateBox(this)'>修改</td>" +
+					"<td><a  href='#' onclick='deleteItem(this)' >删除</td>"+
+					"</tr>";
+			}
+			$("#table").html(tr_str);
+			
+    		
+			$(".M-box").pagination({
+				pageCount: data.pages,
+				current: data.page_num,
+				callback: 'pageselectCallback',
+				prevContent: "上一页",
+				nextContent: "下一页",
+				jump: true,
+				coping: true,
+				callback: function (api) {
+					getData(api.getCurrent())
+				}
+			});
+		
+		}
+
+// 添加
+   function activityAdd() {
+        $.ajax({
+            url: "http://192.168.1.138:8080/api/propertyValue/add",
+            type: "post",
+            data: $("#activity-update-form").serialize(),
+            dataType: "json",
+            cahce: false,
+            xhrFields:{
+            	 withCredentials:true
+            },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                alert(result.msg);
+                if (result.code == 200) {
+                    window.location.href = "query.html";
+                }
+            },error: function (result) {
+                alert("网络连接错误！");
+            }
+        });
+    
+	}
+//删除
+	function deleteItem(item){
+		if (confirm("确定要删除吗？")){
+			var id = $(item).closest("tr").data("id");
+			var data = "";
+			data += "id=" + id;
+			$.ajax({
+				url: 'http://192.168.1.138:8080/api/propertyValue/delete',
+				type: "post",
+				dataType: "json",
+				cache: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				 beforeSend: function () {},
+				 complete: function () {},
+				data: data,
+				success: function (result) {
+					if (result.code == 200) {
+						alert(result.msg);
+						var tr = $(item).closest("tr");
+						tr.remove();
+					}
+
+				},error: function (result) {
+					alert(result.msg);
+				}
+
+			});
+		}
+
+	} 
+//修改
+	</script>
+	<div class="activity-update-box" >
+    <div id="activity-update-dialog" >
+  <div>
+     
+        <form id="activity-update-form" method="post" enctype="">
+       
+            <tableid="activity_alter_table"> <tr>
+                    <td>value：</td>
+                    <td>
+                        <input type="text" name="value" id="value" autocomplete="off" />
+                    </td>
+                </tr>
+              <tr>
+                    <td>product_id：</td>
+                    <td><input type="text" name="product_id" id="product_id" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                    <td>property_id：</td>
+                    <td><input type="text" name="property_id" id="property_id" autocomplete="off" /></td>
+                </tr>
+                    <td>
+                        <input type="button" value="提交" id="btn1" onclick="activityAdd(this)" />&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" value="取消" id="btn2" onclick="$(this).closest('.activity-update-box').hide();" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+   </div>
+  </div>
+
+	<div >
+
+		<table   cellspacing="0" cellpadding="0" align="center" id="table">
+			<div style="width: 120px; height: 45px; background-color:#6ec3c9; text-align: center; line-height: 40px;border:1px solid #000; border-radius:25px;">产品属性值</div>
+		</table>
+
+		<div align="center">
+			<div class="M-box"></div>
+		</div>
+	</div>
+	
+</body>
+</html>

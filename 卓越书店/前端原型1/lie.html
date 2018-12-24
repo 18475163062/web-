@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	 <script src="./jq/jquery-1.9.1.min.js"></script>
+	 <style>
+		.l1{
+			width: 190px;
+			height: 210px;
+		}
+		ul{
+			list-style: none;
+			border: 1px solid red;
+			width: 300px;
+		
+		}
+	 </style>
+</head>
+<body>
+	<div id="box"></div>
+	<script type="text/javascript">
+	// var json = [{"img":"img/a.jpg","child":[{"title":"小说","title1":"13"}]},{"img":"img/g.jpg","child":[{"title":"文学","price":"15"}]}];
+	 var json =[{"img":"img/a.jpg","child":[{"title":"添加通知","url":"lie1.html",},{"title":"12元","url":"lie1.html"}]},{"img":"img/g.jpg","child":[{"title":"申报时限","url":""},{"title":"课题申报","url":"/notice/add"}]}];
+	$(function(){
+		
+		liStr = "";
+        for (x in json) {
+            liStr += '<li class="l2"><img src="'+ json[x].img + '" class="l1"></img><ul>';
+
+            var child = json[x].child;
+            for (y in child) {
+                liStr += '<li><a href="' + child[y].url + '">' + child[y].title + '</a></li>';
+                
+            }
+
+            liStr += '</ul></li>';
+        }
+		$("#box").html(liStr);
+	});
+	</script>
+</body>
+</html>

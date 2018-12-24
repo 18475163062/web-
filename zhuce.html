@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>注册</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script>
+	var areas;
+
+    $(function () {
+        getAreas();
+    });
+
+    var areaXhr;
+    function getAreas() {
+        if (areas) return;
+        if (areaXhr) areaXhr.abort();
+        areaXhr = $.ajax({
+            url: "http://192.168.1.137:8089/api/unit/area/list",
+            type: "get",
+            dataType: "json",
+            cache: false,
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    areas = result.data;
+                    var selects = '<input id="unit-input" type="hidden" name="unit_id" value="">'
+                        + '<select onchange="changeUnitSelect(this)">'
+                        + '<option value="">请选择</option>';
+
+                    for (x in areas) {
+                        selects += '<option value="' + x + '">' + areas[x].name + '</option>';
+                    }
+
+                    selects += '</select>'
+                        + '<select id="unit-select" onchange="$(\'#unit-input\').val($(this).val())">' + initUnitOption(areas[0].units) + '</select>';
+                    $("#unit-select-box").html(selects);
+                }
+            },error: function (result) {
+            }
+        });
+    }
+
+		function register(){
+			
+			$.ajax({
+				type:"post",
+				url:"http://192.168.1.137:8089/api/user/register",
+				data:$("#zhuce").serialize(),
+				dataType:'json',
+				cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success:function(result){
+                	alert(result.msg);
+                	if (result.code == 200) {
+                		window.location.href = "denglu.html";
+                	}
+                },
+                error: function (result) {
+                alert("网络连接出错！");
+            }
+			});
+		}
+
+		function changeUnitSelect(item) {
+        var index = $(item).val()
+        $("#unit-input").val("");
+        if (index) {
+            $("#unit-select").html(initUnitOption(areas[index].units));
+        } else {
+            $("#unit-select").html(initUnitOption());
+        }
+
+    }
+
+    function initUnitOption(units) {
+        var option = '<option value="">请选择</option>';
+        for (x in units) {
+            option += '<option value="' + units[x].id + '">' + units[x].name + '</option>';
+        }
+        return option;
+    }
+	</script>
+	<style>
+		body{
+		margin: 0px ;
+		padding:0px;
+		text-align:center;
+	}
+		#container{
+			padding-top: 20px;
+			text-align: left;
+			margin: auto;
+			background: #f1f1fc;
+			width: 1100px;
+			height: 665px;
+			font-size: 14px;
+			font-family: "微软雅黑";
+		}
+		.l1{
+			width: 150px;
+			text-align: right;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<form action="" id="zhuce">
+			<table border="1" width="1100px" align="center">
+				<tr>
+					<td colspan="4">新用户注册</td>
+				</tr>
+				<tr>
+					<td  class="l1">账号：</td>
+					<td><input name="uname" type="text" autocomplete="off"></td>
+					<td  class="l1">姓名：</td>
+					<td><input name="realname" type="text" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">密码：</td>
+					<td><input name="password" type="text" autocomplete="off"></td>
+					<td  class="l1">确认密码：</td>
+					<td><input type="text" autocomplete="off">
+				</tr>
+				<tr>
+					<td  class="l1">性别：</td>
+					<td>
+						<label><input type="radio" value="male" name="gender" checked="checked">男</label>&nbsp;<label><input  type="radio" name="gender" value="female">女</label>
+					</td>
+					<td  class="l1">民族：</td>
+					<td><input name="ethnic" type="text" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">单位：</td>
+					<td id="unit-select-box">
+                <input type="button" onclick="getAreas()" >
+            </td>
+					
+					<td  class="l1">出生日期：</td>
+					<td><input name="birthday" type="date" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">职务：</td>
+					<td><input name="position" type="text" autocomplete="off"></td>
+					<td  class="l1">职称：</td>
+					<td><input name="professional_title" type="text" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">电子邮箱：</td>
+					<td><input name="email" type="text" autocomplete="off"></td>
+					<td  class="l1">手机：</td>
+					<td><input name="phone" type="text" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">固定电话：</td>
+					<td><input name="telephone" type="text" autocomplete="off"></td>
+					<td  class="l1">传真：</td>
+					<td><input name="fax" type="text" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">学历：</td>
+					<td><input name="education"  type="text" autocomplete="off"></td>
+					<td  class="l1">学位：</td>
+					<td><input name="degree" type="text" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td  class="l1">专业：</td>
+					<td><input name="profession" type="text" autocomplete="off"></td>
+					<td class="l1">邮政编码：</td>
+					<td><input name="postcode" type="text" au></td>
+				</tr>
+				<tr>
+					<td  class="l1">通讯地址：</td>
+					<td><input name="address" type="text" autocomplete="off"></td>
+					
+				</tr>
+				<tr>
+					<td  class="l1">注意事项：</td>
+					<td colspan="3"><textarea name="" id="" cols="100" rows="12" >
+请详细浏览注册注意事项，然后再进行下一步操作：
+1. 项目申报人职责：负责维护个人基本信息；向科研办申报项目，实施获得立项的相关项目，并报告相关进展。提交项目成果和结题报告。
+2. 本系统为非涉密系统，所有用户禁止在本系统操作任何涉密信息。
+3. 注明“*”的空格为必填项，请勿留空。
+4. 用户名在6-20位之间，请用英文小写、数字、下划线，不能全部是数字或下划线。<
+5. 请认真填写单位信息的各项内容，确保信息真实可靠，完成用户帐号注册，以免影响项目申报。 
+6. 可以下载业务使用指南，了解单位注册流程，申报人注册流程，及项目申报流程等
+7. 注册成功后，请等待单位管理员审核。
+8. 如有疑问请联系管理员，管理员邮箱为：zhjyit@gmail.com</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+					<input type="button" onclick="register()" value="注册">&nbsp;<input type="reset" value="重置"></td>
+
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

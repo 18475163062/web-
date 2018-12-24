@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<style>
+		.tu{
+			width: 150px;
+			height: 200px;
+		}
+		.left{
+			padding-left: -10px;
+			text-align: center;
+			height: 230px;
+			width: 150px;
+			float: left;
+			border: 1px solid red;
+		}
+		.right{
+			/*padding-left: -20px;*/
+			padding-right: 10px;
+			line-height: 20px;
+			text-align: left;
+			height: 230px;
+			width: 630px;
+			float: right;
+			border: 1px solid red; 
+		}
+		.white_content {
+			display: none;
+			position: absolute;
+			top: 15%;
+			left: 18%;
+			width: 60%;
+			height: 60%;
+			border: 1px solid lightblue;
+			background-color: white;
+			z-index:1002;
+			/*overflow: auto;*/
+		}
+	</style>
+	<script>
+		function getQueryVariable(variable) {
+    	var query = window.location.search.substring(1);
+    	var vars = query.split("&");
+    	for (var i = 0; i < vars.length; i++) {
+       		var pair = vars[i].split("=");
+        	if (pair[0] == variable) return pair[1];
+    		}
+		}
+		$(function(){
+			showActivityBo(getQueryVariable("book_id"))
+		})
+		function showActivityBo(book_id) {
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/Book/selectById?book_id=" + book_id,
+				type: "get",
+        		dataType: "json",
+        		cache: false,
+        		xhrFields: {
+           		   withCredentials: true
+        		},
+        		success: function (result) {
+           			 if (result.code == 200) {
+           			 	initData(result.data);
+           			 }
+       			}
+			});
+		}
+		function initData(data){
+			var list =data;
+			var tr_str="";
+			tr_str +="<div  id='buttom' data-book_id='"+list.book_id+"'>"+
+				"<ul class='left'>"+
+						"<li>"+ list.bookname+"</li>"+
+						"<li><img onclick='showActivityBo(this)' src='"+ "http://118.89.41.29:8080" + list.pic_url +"' class='tu'></img></li>"+
+				"</ul>"+
+				"<ul class='right'>"+
+						
+						"<li>"+"作者："+ list.author+"</li>"+
+						"<li>" +"出版社："+ list.press+"</li>"+
+						"<li>"+"页数："+ list.page+"</li>"+
+						"<li>"+"价格："+ list.price+"</li>"+
+						"<li>"+"库存："+ list.mount+"</li>"+
+						"<li>"+"isbn："+ list.isbn+"</li>"+
+				"</ul>"+
+				"<ul class=''>"+
+						"<li>"+"作者简介："+ list.author_introduction+"</li>"+
+				"</ul>"+
+				"<ul class=''>"+
+						"<li>"+"内容简介："+ list.bookcontent+"</li>"+
+				"</ul>"+
+				"</div>";
+
+			$("#container").html(tr_str);
+		}
+	</script>
+	<!-- 弹出框 -->
+	<script type="text/javascript">
+		//弹出隐藏层
+		function ShowDiv(show_div,bg_div){
+		document.getElementById(show_div).style.display='block';
+		document.getElementById(bg_div).style.display='block' ;
+		var bgdiv = document.getElementById(bg_div);
+		bgdiv.style.width = document.body.scrollWidth;
+		// bgdiv.style.height = $(document).height();
+		$("#"+bg_div).height($(document).height());
+		};
+		//关闭弹出层
+		function CloseDiv(show_div,bg_div)
+		{
+		document.getElementById(show_div).style.display='none';
+		document.getElementById(bg_div).style.display='none';
+		};
+	</script>
+</head>
+<body>
+	<div>
+		<div style="width: 800px;text-align: center;">
+			<div cursor:pointer;><input  type="button" value="增加"  onclick="ShowDiv('MyDiv')" /></div>
+				<div id="MyDiv" class="white_content">
+					<div style="text-align: right; cursor: default; height: 40px;" id="move">
+						<input type="button" value="关闭" onclick="CloseDiv('MyDiv')">
+					</div>
+					<div>
+					<!-- gdgdgdg -->
+						<!-- <form id="tianjia" enctype="multipart/form-data">					
+							名字：<input type="text" name="name"><br>
+							图片：<input type="file" name="multipartFile"><br>
+							<input type="button" onclick="tijiao()" value="提交"><input type="reset" value="重置">
+						</form> -->
+					</div>
+				</div>
+		</div>
+		<div id="container"></div>
+	</div>
+</body>
+</html>

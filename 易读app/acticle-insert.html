@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<style>
+        #editor{
+            width: 880px;
+            /*height: 400px;*/
+        }
+    </style>
+    <script>
+		function tijiao(){
+			var formData = new FormData($("#tianjia")[0]); 
+			$.ajax({ 
+			    url: 'http://118.89.41.29:8080/api/article/insert', 
+			    type: 'POST', 
+			    data: formData, 
+			    async: false, 
+			    contentType: false, 
+			    processData: false, 
+			    cache:false,//去掉缓存
+				xhrFields:{
+					withCredentials:true
+				},
+			    success: function(data) {
+			        if (data.code ==200) {
+						alert(data.msg);
+					}else{
+						alert(data.msg);
+					}
+			     }, 
+			     error:function(){
+							alert("网络连接错误");
+				}
+		    }); 
+		}
+	</script>
+</head>
+<body>
+	<div>
+		<h3>发表文章</h3>
+		<form id="tianjia" enctype="multipart/form-data">	
+			user_id：<input type="text" name="user_id"><br>
+			标题：<input type="text" name="title"><br>
+			内容：<div id="editor">
+				<!-- <iframe src="https://video.pc6.com/v/1807/hsxspzmpxinxg.mp4" frameborder="0"></iframe> -->
+       				 <textarea id="text1" name="content" style="width: 0; height:0; display: none;" ></textarea>
+   				 </div>
+			<!-- 开始日期：<input type="texte" name="create_time"><br> -->
+			封面图片：<input type="file" name="multipartFile1"><br>
+
+			<!-- 类型：<input type="text" name="sum"><br> -->
+			<!-- <select name="multipartFile1">
+					  <option value ="shang">4</option>
+					  <option value ="xia">3</option>
+				 </select><br> -->
+			<input type="button" onclick="tijiao()" value="提交"><input type="reset" value="重置">
+		</form>
+	</div>
+	<script type="text/javascript" src="jq/wangEditor.min.js"></script>
+    <script type="text/javascript">
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        var $text1 = $('#text1')
+    editor.customConfig.onchange = function (html) {
+        // 监控变化，同步更新到 textarea
+        $text1.val(html)
+    }
+        // 或者 var editor = new E( document.getElementById('#editor') )
+        editor.customConfig.uploadImgShowBase64 = true 
+        editor.create()
+        $text1.val(editor.txt.html())
+    </script>
+</body>
+</html>

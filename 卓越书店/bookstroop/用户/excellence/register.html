@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+    <style type="text/css">
+        body{
+            background:#eeeeee;
+        }
+        table{
+            width: 400px;
+            height: 270px;
+            border: 1px solid #ccc;
+            border-radius:15px;
+            background: white;
+            text-align: center;
+        }
+        table input{
+            line-height: 2em;
+        }
+        .text1{
+            color:#337a21;
+            border: none;
+            margin-left:50px;
+            text-decoration: none;
+        }
+         a:hover{
+            color:#5b6059;
+            text-decoration: underline; 
+        }
+    </style>
+    <script src="./js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        function register() {
+            $.ajax({
+                url: "http://192.168.1.138:8080/api/user/register",
+                type: "post",
+                data: $("#register-form").serialize(),
+                dataType: "json",
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {},
+                complete: function () {},
+                success: function (result) {
+                    alert(result.msg);
+                    // if (result.code == 200) window.location.href = "./cha.html";
+                },
+                error: function (result) {
+
+                }
+            });
+        }
+
+       
+    </script>
+    <style type="text/css">
+    
+    </style>
+</head>
+
+<body>
+        <center>
+        <form id="register-form" method="post" enctype="multipart/form-data">
+            <table cellpadding="0" cellspacing="0" border="0" class="centenTable">
+             <caption style="font-family:'华文行楷'; font-size:25px; margin-top: 20px;">输入您注册的信息</caption>
+                <tr>
+                    <tr>
+                    <td>
+                        <span class="guestfont">
+                            账号： <input type="text" name="mobile_phone" value="" autocomplete="off" />
+                        </span>
+                    </td>
+                    </tr>
+                     <tr>
+                    <td>
+                        <span class="guestfont">
+                            密码：  <input type="password" name="password" value=""  autocomplete="off"/>
+                        </span>
+                    </td>
+                     </tr> 
+                     <tr>
+                    <td>
+                        <span class="guestfont">
+                            email：<input type="text" name="email" value="" autocomplete="off"/>
+                        </span>
+                    </td>
+                     </tr>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="button" name="" value="  注    册  " class="text" onclick="register()" />
+                        <a href="Login.html" class="text1">登  录</a>
+                          
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+        </center>
+
+
+</body>
+
+</html>

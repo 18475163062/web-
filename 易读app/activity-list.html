@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script src="jq/jquery.pagination.js"></script>
+	<style>
+		*{
+			margin: 0;padding: 0;
+		}
+		.tu{
+			width: 150px;
+			height: 200px;
+		}
+		#top1{
+			border-bottom: 1px solid red;
+			float: right;
+			width: 696px;
+			height: 200px;
+			padding-bottom:  20px;
+			padding-top:  20px;
+		}
+		.to{
+			height: 200px;
+			text-align: center;
+			border-bottom: 1px solid red;
+			width: 200px;
+			float: left;
+			padding-bottom:  20px;
+			padding-top:  20px;
+		}
+		#top{
+			/*border: 1px solid red;*/
+		}
+	</style>
+	<script>
+	$(function(){
+		getData(1);
+	});
+		function getData(page_num){
+			var _data = "page_num=" + page_num + "&page_size=9";
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/activity/selectByType?type=" + 4,
+				type:"get",
+				dataType:"json",
+				cache:false,
+				xhrFields:{
+					withCredentials:true
+				},
+				data:_data,
+				success:function(result){
+					// ；
+					if (result.code ==200) {
+						initData(result.data);
+						alert("nihao")
+					}
+				}
+			})
+		}
+		function initData(data){
+			var list = data.list;
+			var tr_str="";
+			for (var i = 0; i < list.length; i++) {
+				tr_str += "<div id='top' data-activity_id='"+list[i].activity_id+"'>"+
+					"<ul>"+
+						// "<li><input type='checkbox' name='checks'   id='allChecksn'></li>"+
+						"<li class='to'><img onclick='showActivityBoxx(this)' src='" + "http://118.89.41.29:8080"+ list[i].image + "' class='tu'></img></li>" +
+							"<ul id='top1'>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].activity_enum1.desc +"</a></li>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].activity_enum.desc +"</a></li>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].create_time +"</a></li>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].last_time +"</a></li>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].sum +"</a></li>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].num +"</a></li>"+
+								"<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].title +"</a></li>"+
+								// "<li ><a href='#' onclick='showActivityBox(this)'>" + list[i].content +"</a></li>"+
+								"<a href='#' onclick='deleteItem(this)'> 删除</a>"+
+								"<a href='#' onclick='showActivityUpdateBox(this)'> 修改</a>"+
+							"</ul>"+
+					"</ul>"+
+				"</div>";
+			}
+			$("#button").html(tr_str);
+		}
+	</script>
+
+<!-- 获取ip -->
+	<script>
+		function showActivityBoxx(item) {
+    window.location.href = "activity-list-off-selectById.html?activity_id=" + $(item).closest("div").data("activity_id");
+    return;
+}
+	</script>
+
+	<!-- 删除 -->
+	<script>
+		function deleteItem(item) {
+			if (confirm("确定要删除吗？")) {
+				var activity_id = $(item).closest("div").data("activity_id");
+				var data = "";
+				data += "activity_id=" + activity_id;
+				$.ajax({
+					url: 'http://118.89.41.29:8080/api/activity/delete',
+					type: "post",
+					dataType: "json",
+					cache: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					 beforeSend: function () {},
+					 complete: function () {},
+					data: data,
+					success: function (result) {
+						if (result.code == 200) {
+							alert(result.msg);
+							var tr = $(item).closest("div");
+							tr.remove();
+						}
+
+					}
+
+				});
+			}
+		}
+	</script>
+</head>
+<body>
+	<div>
+		<div style="width: 800px;text-align: center;"><a href="add-activity-list.html">线下发布</a></div>
+		<div id="button">
+			<!-- <a href=""></a> -->
+		</div>
+	</div>
+	
+</body>
+</html>

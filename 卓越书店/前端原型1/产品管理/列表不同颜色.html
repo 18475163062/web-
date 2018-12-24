@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+	<title>添加商品</title>
+	
+	<script src="js/jquery-1.8.2.min.js"></script>
+	<script language="javascript">
+window.onload = function(){ //表格隔行显示不同颜色
+var tab = document.getElementById('oTable');
+for(var i=0;i<tab.rows.length;i++){
+tab.rows[i].bgColor = (i%2==0) ? 'white' : '#e6e6e6' ;
+}
+}
+</script> 
+</head>
+<body>
+	
+<table id="oTable" width="100" border="1" style="border-collapse:collapse;">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</body>
+</html>

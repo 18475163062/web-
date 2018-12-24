@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>通知列表</title>
+	<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+		#right-below {
+			width: 1107px;
+			background-color: #f1f1fc;
+			height: 768px;
+			position: relative;
+		}
+
+		p {
+			height: 35px;
+			margin: 0px;
+			padding-top: 10px;
+			font-size: 18px;
+		}
+
+		table tr:hover {
+			background: #f1f1fc;
+		}
+
+		table {
+			background: #eaf7ff;
+		}
+
+		table th {
+			background: #96d5ff;
+		}
+
+		#page-num {
+			width: 30px;
+			background-color: #f1f1fc;
+			border: #000 1px solid;
+		}
+
+		a {
+			text-decoration: none;
+			color: #000;
+		}
+
+		.M-box a {
+			min-width: 15px;
+			color: black;
+			text-align: center;
+			background: whitre;
+			border: 1px solid #eeeeee;
+			border-radius: 5px;
+			padding: 5px 10px;
+			margin: 20px 2px;
+			display: inline-block;
+		}
+
+		.M-box span {
+			min-width: 15px;
+			text-align: center;
+			border: 1px solid transparent;
+			padding: 5px 10px;
+			margin: 0 2px;
+			display: inline-block;
+
+		}
+
+		.M-box .active {
+			color: white;
+			background: #96d5ff;
+			border-radius: 5px;
+		}
+
+		.jump-ipt {
+			width: 30px;
+		}
+
+		.cc {
+			text-align: center;
+		}
+	</style>
+	<script type="text/jscript" src="./js/jquery-1.9.1.min.js">
+	</script>
+	<script src="jq/jquery.pagination.js"></script>
+	<script>
+		var basePath = "http://192.168.1.137:8089";
+		$(function () {
+			getData(1);
+		});
+		function getData(page_num) {
+			var _data = "page_num=" + page_num + "&page_size=10";
+			$.ajax({
+				url: "http://192.168.1.137:8089/api/notice/list",
+				type: "get",
+				dataType: "json",
+				cache: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				beforeSend: function () {},
+				complete: function () {},
+				data: _data,
+				success: function (result) {
+					if (result.code == 200) {
+						initData(result.data);
+					}
+				}
+			});
+		}
+		function initData(data) {
+			var list = data.list;
+			var tr_str = "<tr>" +
+			"<th   width='30px'></th>" +
+				"<th   width='380px'>主题</th>" +
+				"<th   width='180px' >发布人</th>" +
+				"<th   width='180px'>时间</th>" +
+				"<th   width='180px'>点击率</th>" +
+				"<th   width='180px'>操作</th>" +
+				"</tr>";
+			for (var i = 0; i < list.length; i++) {
+				tr_str += "<tr data-id='" + list[i].id + "'>" +
+                    "<td> <input type='checkbox' name='checks'   id='allChecksn' ></td>" +
+					"<td >" + list[i].theme + "</td>" +
+					"<td  class='cc'>" + list[i].host + " </td>" +
+					"<td   class='cc'>" + list[i].date + "</td>" +
+					"<td  class='cc'>" + list[i].click + "</td>" +
+					"<td  class='cc'>&nbsp&nbsp<a  href='/noticeShow.html' >查看&nbsp&nbsp<a  href='javascript:void(0)' onclick='showNoticeUpdateBox(this)'  >修改&nbsp&nbsp<a  href='javascript:void(0);'  onclick='deleteItem(this)'>删除</td>" +
+					"</tr>";
+			}
+			$("#table").html(tr_str);
+
+			$(".M-box").pagination({
+				pageCount: data.pages,
+				current: data.page_num,
+				callback: 'pageselectCallback',
+				prevContent: "上一页",
+				nextContent: "下一页",
+				jump: true,
+				coping: true,
+				callback: function (api) {
+					getData(api.getCurrent())
+				}
+			});
+		}
+ var noticeXhr;
+    function getNoticeList(pageNum, popstate) {
+        if (noticeXhr) noticeXhr.abort();
+        noticeXhr = $.ajax({
+            url: "/api/notice/list",
+            type: "get",
+            data: "page_num=" + pageNum,
+            dataType: "json",
+            cache: false,
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    var data = result.data;
+                    var list = data.list;
+
+                    var tr = "";
+                    for (x in list) {
+                        tr += '<tr data-id="' + list[x].id + '">'
+                            + '<td class="theme">' + list[x].theme + '</td>'
+                            + '<td class="host">' + list[x].host + '</td>'
+                            + '<td class="date">' + list[x].date + '</td>'
+                            + '<td class="click">' + list[x].click + '</td>'
+                            + '<td>'
+                            + '<a data-url="/notice/show/' + list[x].id + '" onclick="openPage(this)">浏览</a>'
+                            // + '<a onclick="noticeShow(this)">浏览</a>'
+                            + '<a onclick="showNoticeUpdateBox(this)">修改</a>'
+                            + '<a onclick="noticeDelete(this)">删除</a>'
+                            + '</td>'
+                            + '</tr>';
+                    }
+                    var headTr = '<tr>'
+                        + '<th>主题</th>'
+                        + '<th>发布</th>'
+                        + '<th>日期</th>'
+                        + '<th>点击率</th>'
+                        + '<th>操作</th>'
+                        + '</tr>';
+                    $("#notice-list-table").html(headTr + tr);
+                    initPage($("#notice-list-page"), data, getNoticeList);
+
+                    if(!popstate) history.pushState({page_num:pageNum,url:"/notice/list?page_num=" + pageNum, container: '#pjax-container'}, null, '?page_num=' + pageNum);
+                }
+            },error: function (result) {
+
+            }
+        });
+    }
+		function deleteItem(item) {
+			if (confirm("确定要删除吗？")) {
+				var id = $(item).closest("tr").data("id");
+				var data = "";
+				data += "id=" + id;
+				$.ajax({
+					url: "http://192.168.1.137:8089/api/notice/delete",
+					type: "post",
+					dataType: "json",
+					cache: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					beforeSend: function () {},
+					complete: function () {},
+					data: data,
+					success: function (result) {
+						if (result.code == 200) {
+							alert(result.data);
+							var tr = $(item).closest("tr");
+							tr.remove();
+						}
+					}
+				});
+			}
+		}
+//通知列表修改
+
+	var noticeXhr;
+    var updateTr;
+    function showNoticeUpdateBox(item) {
+    	$(".notice-update-box").show();
+
+         var tr=$(item).closest("tr");
+         update_tr=tr;
+
+        update_id = tr.data("id");
+          
+        if (noticeXhr) noticeXhr.abort();
+            noticeXhr = $.ajax({
+            url: basePath+"/api/notice/show/" + update_id,
+            type: "get",
+            dataType: "json",
+            
+            cache: false,
+            xhrFields: {
+               withCredentials: true
+          },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                // console.log(result);
+            
+                if (result.code == 200) {
+
+                    updateTr = tr;
+                    
+                    var data = result.data;
+
+                    var dialog = $("#notice-update-dialog");
+
+                    dialog.find("input[name=id]").val(data.id);
+                    dialog.find("input[name=theme]").val(data.theme);
+                    dialog.find("input[name=host]").val(data.host);
+                    dialog.find("textarea[name=content]").val(data.content);
+                    if (data.top) {
+                        dialog.find("input[name=top]").val("true");
+                        dialog.find(".top").prop("checked",true);
+                    } else {
+                        dialog.find("input[name=top]").val("false");
+                        dialog.find(".top").prop("checked",false);
+                    }
+
+                    dialog.find("input[name=file]").val("");
+                    if (data.annex) {
+                        dialog.find("a[name=annex]").show().text(data.annex);
+                    } else {
+                        dialog.find("a[name=annex]").hide();
+                    }
+
+           }
+                   
+            },
+            error: function (result) {
+
+            }
+        });
+    }
+    
+    function noticeUpdate() {
+        if (noticeXhr) noticeXhr.abort();
+        noticeXhr = $.ajax({
+            url: basePath+"/api/notice/update",
+            type: "post",
+            data: new FormData($("#notice-update-form")[0]),
+            dataType: "json",
+            cache: false, // 上传文件无需缓存
+            processData: false, // 用于对data参数进行序列化处理 这里必须false
+            contentType: false, // 必须
+            async : true,
+            cache: false,
+            xhrFields: {
+               withCredentials: true
+          },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    alert(result.msg);
+                    var dialog = $("#notice-update-dialog");
+
+                    updateTr.children("#theme").text(dialog.find("input[name=theme]").val());
+                    updateTr.children("#host").text(dialog.find("input[name=host]").val());
+                } else {
+                    
+                }
+            },error: function (result) {
+
+            }
+        });
+    }
+
+ //通知列表修改
+ 
+
+            function chAll() {
+                var flag = document.getElementById('allChecksn').checked;
+                var cks = document.getElementsByName('checks');
+                for (var i = 0; i < cks.length; i++) {
+                    cks[i].checked = flag;
+                }
+            }
+            function deleteAll(item) {
+                var checkedNum = $("input[name='checks']:checked").length;
+                if (checkedNum == 0) {
+                    alert("请选择至少一项！");
+                    return;
+                }
+                if (confirm("确定要删除所选项目？")) {
+                    var checkedList = new Array();
+                    var data = "";
+                    data += "id=" + id;
+                    $("input[name='checks']:checked").each(function () {
+                        checkedList.push($(this).val());
+                    });
+                    $.ajax({
+                        type: "get",
+                        url: "http://192.168.1.137:8089/api/notice/delete",
+                        data: {
+                            'delitems': checkedList.toString()
+                        },
+                        success: function (result) {
+                            $("[name='checks']:checkbox").attr("checked", false);
+                            window.location.reload();
+                        }
+                    })
+                }
+            }
+        </script>
+</head>
+<body>
+<!-- 通知列表修改 -->
+	<div class="notice-update-box" style="background: #f1f1fc;  position: fixed; width: 100%; height:100%; margin:0px; padding:0px; z-index: 900; display: none;" >
+    <div id="notice-update-dialog" style=" max-width: 100%;max-height: 100%; background: #fff; padding:60px; position: fixed;margin:0 auto; top: 50%; left: 50%; transform: translate(-50%,-50%);  border-radius: 5px;">
+  <div>
+       <h3>通知修改</h3><br>
+        <form id="notice-update-form" method="post" enctype="">
+        <input type="hidden" name="id" >
+            <table border="1" cellpadding="5" cellspacing="1" style="width: 800px; margin:0 auto;" id="notice_alter_table"> <tr>
+                    <td>主题：</td>
+                    <td>
+                        <input type="text" name="theme" id="theme" autocomplete="off" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="hidden" name="top">
+                        <input class="top" type="checkbox"
+                        onclick="$(this).siblings('input[name=top]').val(($(this).prop('checked') ? 'true' : 'false'));" />置顶
+                    </td>
+                </tr>
+                <tr>
+                    <td>作者：</td>
+                    <td>
+                        <input type="text" name="host" id="host" autocomplete="off" />
+                    </td>
+                </tr>
+                  <tr>
+                    <td>附件：</td>
+                    <td>
+                        <a name="annex" style="display: none;"></a>
+                        <input type="file" name="file" id="file" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>内容：</td>
+                    <td>
+                        <textarea name="content" id="content" cols="30" rows="15"></textarea> 
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" value="提交" id="btn1" onclick="noticeUpdate()" />&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" value="取消" id="btn2" onclick="$(this).closest('.notice-update-box').hide();" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+   </div>
+  </div>
+
+  <!-- 通知列表修改 -->
+
+	<div id="right-below">
+		<table width="1100px" align="center" id="table">
+			<p>通知公告</p>
+			<input type='checkbox' onclick='chAll()' id='allChecksn' name='check'>全选
+             <a href='javascript:void(0);' onclick='deleteAll(this)'>删除</a>
+		</table>
+
+		<div align="center">
+			<div class="M-box"></div>
+		</div>
+	</div>
+</body>
+</html>

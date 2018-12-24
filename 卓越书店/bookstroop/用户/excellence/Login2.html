@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录</title>
+	<style> 
+          html,body{
+            margin:0;
+            padding:0;
+          }
+        /*body{
+            background:#eeeeee;           
+        }*/
+        .top{
+            width: 100%;
+            height: 120px;
+        }
+        .top img{
+            width: 80px;
+            height: 80px;
+           margin:25px 50px;
+           float: left;
+        }
+        .top span{
+            width: 900px;
+            height: 20px;
+            border:1px solid #ffb4a8;
+            background: #fef2f2;
+            float: right;
+            font-size: 12px;
+            margin:35px 150px 35px 0px;
+            padding: 9px;
+            text-align: center;
+        }
+        .main{
+            clear: none;
+            width: 100%;
+            height: 500px;
+            background:linear-gradient(#2e78b7,#4d98cf,#408cc8); 
+        }
+        .left{
+            float: left;
+            margin-left: -200px;
+        }
+        .left img{
+            width: 500px;
+            height: 500px;
+        }
+        .right{
+            float: right;
+            margin:65px 170px 65px 50px;
+        }
+
+        #form1{
+            text-align: center;
+        }
+        table{
+            width: 300px;
+            height: 370px;
+            border: 1px solid #ccc;
+            /*border-radius:15px;
+            background:rgba(255,255,255,0.6) none repeat scroll !important; 
+            filter: alpha(opacity=60);*/
+            text-align: center;
+             background: #fff;
+           
+        }
+        table tr{
+            display: block;
+            margin:20px ;
+            text-align: center;
+
+        }
+        table input{
+            line-height: 2.5em;
+            padding:0 10px;
+            background: #fff;
+            border:1px solid #ccc;
+        }
+        table #btn
+        {
+            border:1px solid red;
+            background: red;
+            width: 260px;
+            margin-left: 5px;
+
+        }
+        table hr{
+           width: 260px;
+           height:1px;
+           background: #ccc;
+           border:none;
+
+
+        }
+        .text1{
+            color:#337a21;
+            border: none;
+            margin-left:50px;
+            text-decoration: none;
+        }
+         a:hover{
+            color:#62a8db;
+            text-decoration: underline; 
+        }
+        a:active{
+            color: red;
+            text-decoration: none;
+        }
+
+        .foot{
+            width: 100%;
+            height:150px;
+            margin-top: 80px;
+        }
+        .foot p{
+            font-size: 14px;
+           text-align: center;
+        }
+        .foot span{
+            color:#ccc;
+        }
+        .foot a{
+            text-decoration: none;
+            color:#626669;
+        }
+        .foot a:hover{
+            color: #000;
+            text-decoration: underline;
+        }
+        .foot a:active{
+            color: red;
+        }
+        .foot .color{
+            color: #888c8f;
+        }
+	</style>
+	<script src="./js/jquery-1.9.1.min.js"></script>
+	<script>
+		function Logon(){	
+		$.ajax({
+            url : "http://192.168.1.138:8080/api/user/login",
+            type : "POST",
+            data : $("#form1").serialize(),
+            dataType : "json",
+            cache: false,
+            xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {
+                },
+                complete: function () {   
+                 },
+            success : function(result) {
+            	alert(result.msg);
+            	if (result.code == 200) window.location.href = "Cancellation.html";
+                },
+            error: function (result) {
+            	alert(result.msg);
+                }
+        });
+            
+       }
+
+	</script>
+</head>
+<body>
+<div class='center'>
+    <div class="top">
+        <img src="./image/logo.jpg" alt="图片不存在">
+        <span>为确保您账户的安全及正常使用，依《网络安全法》相关要求，6月1日起会员账户需绑定手机。如您还未绑定，请尽快完成，感谢您的理解及支持！</span>
+    </div>
+    <div class="main">
+        <div class="left">
+            <img src="./image/bg.jpg" alt="图片不存在">
+        </div>
+        <div class="right">
+        	<form action="" id="form1" method="post" enctype="multipart/form-data">
+          
+                <table cellpadding="5" cellspacing="0" border="0" class="centenTable" align="center">
+               <!--  <caption style="font-family:'华文行楷'; font-size:25px; margin-top: 20px;">输入您登录的信息</caption> -->
+                	<tr>
+                        <td>账号：
+                            <input type="text" id="phone" name="mobile_phone" />
+                        </td>
+                    </tr>	
+                	<tr>
+                        <td>密码：
+                        <input type="text" id="pow" name="password" /></td>
+                    </tr>
+                    <tr>
+                        <td><input type="button" id="btn" value="登录"  onclick="Logon()"/>
+                      <!--   <a href="register.html" class="text1">取消</a> --></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #5d6165;font-size: 14px;"><span>第三方登录<hr></span>
+                        </td>
+                    </tr>
+                	<tr>
+                        <td style="">
+                            <img src="image/weixin.jpg" alt="图片不存在" style="width: 40px;height: 40px; margin-left: 40px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                            <img src="image/qq.jpg" alt="图片不存在" style="width: 50px;height: 50px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                             <img src="image/weibo.jpg" alt="图片不存在" style="width: 50px;height: 50px;">
+                        </td>
+                    </tr>	
+                		
+                		
+                    </table>
+        	   </form>
+            </div>
+        </div>
+        <div class="foot">
+            <p>
+                <a href="#">关于我们</a>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="#">营销中心</a>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="#">廉正举报</a>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="#">联系客服</a>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="#"> 联系我们</a>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="#">法律声明及隐私权政策</a>  
+            </p>
+            <p class="color">© 2018 Taobao.com 版权所有&nbsp;&nbsp;&nbsp;网络文化经营许可证：浙网文[2016]0132-032号&nbsp;&nbsp;&nbsp;增值电信业务经营许可证：浙B2-20080224-1&nbsp;&nbsp;&nbsp;信息网络传播视听节目许可证：1109364号</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>备案课题列表</title>
+</head>
+<body>
+    <style type="text/css">
+        #right-below {
+            width: 1107px;
+            background-color: #f1f1fc;
+            height: 768px;
+            position: relative;
+        }
+
+        p {
+            height: 35px;
+            margin: 0px;
+            padding-top: 10px;
+            font-size: 18px;
+        }
+
+        table tr:hover {
+            background: #f1f1fc;
+        }
+
+        table {
+            background: #eaf7ff;
+        }
+
+        table th {
+            background: #96d5ff;
+        }
+
+        #page-num {
+            width: 30px;
+            background-color: #f1f1fc;
+            border: #000 1px solid;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .M-box a {
+            min-width: 15px;
+            color: black;
+            text-align: center;
+            background: whitre;
+            border: 1px solid #eeeeee;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 20px 2px;
+            display: inline-block;
+        }
+
+        .M-box span {
+            min-width: 15px;
+            text-align: center;
+            border: 1px solid transparent;
+            padding: 5px 10px;
+            margin: 0 2px;
+            display: inline-block;
+
+        }
+
+        .M-box .active {
+            color: white;
+            background: #96d5ff;
+            border-radius: 5px;
+        }
+
+        .jump-ipt {
+            width: 30px;
+        }
+
+        .cc {
+            text-align: center;
+        }
+    </style>
+    <script type="text/jscript" src="jq/jquery-1.9.1.min.js">
+    </script>
+    <script src="jq/jquery.pagination.js">
+   </script>
+    <script>
+        var basePath = "http://192.168.1.137:8089";
+
+        $(function () {
+            getData(1);
+        });
+
+        function getData(page_num) {
+            var _data = "page_num=" + page_num + "&page_size=10";
+            $.ajax({
+                url: "http://192.168.1.137:8089/api/record/list",
+                type: "get",
+                dataType: "json",
+                cache: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {},
+                complete: function () {},
+                data: _data,
+                success: function (result) {
+                    if (result.code == 200) {
+                        initData(result.data);
+                    }
+                }
+            });
+        }
+        function initData(data) {
+            var list = data.list;
+            var tr_str = "<tr>" +
+                "<th   width='30px'></th>" +
+                "<th   width='380px'>课题名称</th>" +
+                "<th   width='180px' >主持人姓名</th>" +
+                "<th   width='200px'>主持人单位</th>" +
+                "<th   width='180px'>立项年度</th>" +
+                "<th   width='180px'>立项编号</th>" +
+                "<th   width='180px'>立项文号</th>" +
+                "<th   width='180px'>所属学科</th>" +
+                "<th   width='180px'>课题类别</th>" +
+                "<th   width='180px'>操作</th>" +
+                "</tr>";
+            for (var i = 0; i < list.length; i++) {
+                tr_str += "<tr data-id='" + list[i].id + "'>" +
+                    "<td> <input type='checkbox' name='checks'   id='allChecksn' ></td>" +
+                    "<td>" + list[i].name + "</td>" +
+                    "<td  class='cc'>" + list[i].host + " </td>" +
+                    "<td   class='cc'>" + list[i].unit + "</td>" +
+                    "<td  class='cc'>" + list[i].year + "</td>" +
+                    "<td  class='cc'>" + list[i].pronum + " </td>" +
+                    "<td  class='cc'>" + list[i].filenum + " </td>" +
+                    "<td  class='cc'>" + list[i].subject + " </td>" +
+                    "<td  class='cc'>" + list[i].classification + " </td>" +
+                    "<td  class='cc'>&nbsp&nbsp<a onclick='xiugai(this)' href='beianketixiugai.html'  >修改&nbsp&nbsp<a  href='javascript:void(0);' onclick='deleteItem(this)' >删除</td>" +
+                    "</tr>";
+            }
+            $("#table").html(tr_str);
+
+            $(".M-box").pagination({
+                pageCount: data.pages,
+                current: data.page_num,
+                callback: 'pageselectCallback',
+                prevContent: "上一页",
+                nextContent: "下一页",
+                jump: true,
+                coping: true,
+                callback: function (api) {
+                    getData(api.getCurrent())
+                }
+            });
+        }
+    </script>
+        <script>
+            function deleteItem(item) {
+                if (confirm("确定要删除吗？")) {
+                    var id = $(item).closest("tr").data("id");
+
+                    var data = "";
+                    data += "id=" + id;
+                    $.ajax({
+                        url: "http://192.168.1.137:8089/api/record/delete",
+                        type: "post",
+                        dataType: "json",
+                         cache: false,
+                          xhrFields: {
+                    withCredentials: true
+                },
+                beforeSend: function () {},
+                complete: function () {},
+                        data: data,
+                        success: function (result) {
+                            if (result.code == 200) {
+                                alert(result.data);
+                                var tr = $(item).closest("tr");
+                                tr.remove();
+                            }
+
+                        }
+
+                    });
+                }
+            }
+        </script>
+        <script>
+            function chAll() {
+                var flag = document.getElementById('allChecksn').checked;
+                var cks = document.getElementsByName('checks');
+
+                for (var i = 0; i < cks.length; i++) {
+                    cks[i].checked = flag;
+                }
+            }
+            function deleteAll(item) {
+                var checkedNum = $("input[name='checks']:checked").length;
+                if (checkedNum == 0) {
+                    alert("请选择至少一项！");
+                    return;
+                }
+                if (confirm("确定要删除所选项目？")) {
+                    var checkedList = new Array();
+                    var data = "";
+                    data += "id=" + id;
+                    $("input[name='checks']:checked").each(function () {
+                        checkedList.push($(this).val());
+                    });
+                    $.ajax({
+                        type: "get",
+                        url: "http://192.168.1.137:8089/api/record/delete",
+                        data: {
+                            'delitems': checkedList.toString()
+                        },
+                        success: function (result) {
+                            $("[name='checks']:checkbox").attr("checked", false);
+                            window.location.reload();
+                        }
+                    })
+                }
+            }
+        </script>
+    </head>
+
+<body>
+        <div id="right-below">
+            <table width="1100px" align="center" id="table">
+                <p>课题列表</p>
+                <input type='checkbox' onclick='chAll()' id='allChecksn' name='check'>全选
+                <a href='javascript:void(0);' onclick='deleteAll(this)'>删除</a>
+            </table>
+            <div align="center">
+                <div class="M-box"></div>
+            </div>
+        </div>
+    </body>
+</html>

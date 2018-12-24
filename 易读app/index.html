@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<link rel="stylesheet" href="css/index.css">
+	<script type="text/javascript">
+		function $(id){return document.getElementById(id)}
+		window.onload = function(){
+		 $("nav").onclick = function(e){
+		  var src = e?e.target:event.srcElement;
+		  if(src.tagName == "P"){
+		   var next = src.nextElementSibling || src.nextSibling;
+		   next.style.display = (next.style.display =="block")?"none":"block";
+		  		}
+		 	}
+		}
+	</script>
+	<style>
+		/*h3{
+			background-color: red;
+		}*/
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div class="top">
+			易读管理系统
+		</div>
+		<div class="xian"></div>
+		<div id="left">
+			<div id="nav">
+				<p class="l1"><a href="book_select.html" target="main">图书管理</a></p>
+				  	<!-- <div>
+				    	<a href="http://www.xker.com">js特效</a>
+				        <a href="http://www.xker.com">网页制作</a>
+				        <a href="http://www.xker.com">动画制作</a>
+				    </div> -->
+				<p>图书借还</p>
+				    <div id="color">
+				     	<a href="record-list.html" target="main">预约成功</a>
+				     	<a href="record-list2.html" target="main">取书成功</a>
+
+				     	<a href="record-list3.html" target="main">预约过期</a>
+				     	<a href="record-list4.html" target="main">预约取消</a>
+				     	<a href="record-list5.html" target="main">借书成功</a>
+				        <a href="record-list6.html" target="main">续借成功</a>
+				        <a href="record-list7.html" target="main">还书成功</a>
+				        <a href="record-list8.html" target="main">逾期未还</a>
+
+				        <!-- <a href="http://www.xker.com">版主大厅</a> -->
+				    </div>
+				<p>活动列表</p>
+				    <div id="color">
+				     	
+				        <a href="activity-list.html" target="main">发布线下活动</a>
+				        <a href="activity-list-noline.html" target="main">发布线上活动</a>
+				        <!-- <a href="http://www.xker.com">版主大厅</a> -->
+				    </div>
+
+				<p>文章发表</p>
+				    <div id="color">
+				        <a href="acticle-list.html" target="main">所有文章</a>
+				        <a href="acticle-insert.html" target="main">文章发表</a>
+				        <a href="1.html" target="main">待审核</a>
+				        <a href="1.html" target="main">不通过审核</a>
+				        <a href="1.html" target="main">审核成功</a>
+				        <!-- <a href="http://www.xker.com">版主大厅</a> -->
+				    </div>
+			</div>
+		</div>
+		<iframe src="book_select.html" name="main" width="930px"    style="float: right; border:none;  border-right: 1px solid #52adff; height: 800px;">
+		</iframe>
+	</div>
+</body>
+</html>

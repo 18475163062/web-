@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<!--<script>
+		function requestjson() {
+			$.ajax({
+				type: 'post',
+				url: 'http://192.168.1.137:8089/api/record/update',
+
+				data: $("#tianjia").serialize(),
+				dataType: "json",
+				cache: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function (result) {}
+			});
+
+		}
+	</script>-->
+	<script>
+		function xiugai(item) {
+			var catid = $(this).parent().siblings("td:eq(0)").text();
+			var listorder_now_text = $(this).text();
+			var id = $(this).parent("tr").parent(td).data("id");
+			var data = "";
+			data += "id=" + id;
+			$.ajax({
+				type: 'post',
+				url: 'http://192.168.1.137:8089/api/record/update',
+				dataType: 'json',
+				data: data,
+				cache: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				beforeSend: function () {},
+				complete: function () {},
+				success: function (result) {
+					if (result.code == 200) {
+					
+						var tr = $(this).parent("tr").parent(td);
+						$.each(data, function (name, value) {
+							$("[name='" + name + "']").val(value)
+						})
+						$.each(data, function (year, value) {
+							$("[name='" + year + "']").val(value)
+						})
+						$.each(data, function (host, value) {
+							$("[name='" + host + "']").val(value)
+						})
+						$.each(data, function (unit, value) {
+							$("[name='" + unit + "']").val(value)
+						})
+						$.each(data, function (pronum, value) {
+							$("[name='" + pronum + "']").val(value)
+						})
+						$.each(data, function (filenum, value) {
+							$("[name='" + filenum + "']").val(value)
+						})
+						$.each(data, function (subject, value) {
+							$("[name='" + subject + "']").val(value)
+						})
+
+						$.each(data, function (classificationey, value) {
+							$("[name='" + classification + "']").val(value)
+						})
+						$.each(data, function (thesis_proposal, value) {
+							$("[name='" + thesis_proposal + "']").val(value)
+						})
+						$.each(data, function (medium_report, value) {
+							$("[name='" + medium_report + "']").val(value)
+						})
+						$.each(data, function (final_report, value) {
+							$("[name='" + final_report + "']").val(value)
+						})
+					}
+
+
+				}
+			})
+		}
+	</script>
+	<style>
+		body {
+			margin: 0px;
+			padding: 0px;
+			text-align: center;
+		}
+
+		#container {
+			position: relative;
+			padding-top: 20px;
+			text-align: left;
+			margin: auto;
+			background: #f1f1fc;
+			width: 1100px;
+			height: 665px;
+			font-size: 14px;
+			font-family: "微软雅黑";
+		}
+
+		.l1 {
+			width: 500px;
+		}
+
+		#div1 {
+			position: absolute;
+			top: 175px;
+			left: 200px;
+			width: 400px;
+			height: 80px;
+			border: 1px solid red;
+			background: pink;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	<div id="container">
+		<form action="" id="tianjia" enctype="multipart/form-data">
+			<table width="1100px" border="1" align="center">
+				<tr>
+					<td colspan="4">添加课题</td>
+				</tr>
+				<tr align="center">
+					<td align="right">课题名称：</td>
+					<td align="left">
+						<input type="text" name="name" value="">
+					</td>
+					<td align="right">立项年度：</td>
+					<td align="left">
+						<input type="text" name="year" value="">
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">主持人名字：</td>
+					<td align="left">
+						<input type="text" name="host" value="">
+					</td>
+					<td align="right">主持人单位：</td>
+					<td align="left">
+						<input type="text" name="unit" value="">
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">立项编号：</td>
+					<td align="left">
+						<input type="text" name="pronum" value="">
+					</td>
+					<td align="right">立项文号：</td>
+					<td align="left">
+						<input type="text" name="filenum" value="">
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">所属学科：</td>
+					<td align="left">
+						<input type="text" name="subject" value="">
+					</td>
+					<td align="right">课题类别：</td>
+					<td align="left">
+						<input type="text" name="classification" value="">
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">开题报告：</td>
+					<td colspan="3" align="left">
+						<input type="file" class="l1" value="无" name="thesis_proposal" value="">&nbsp;
+						<input id="show" type="button" value="添加">
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">中期报告：</td>
+					<td colspan="3" align="left">
+						<input type="file" class="l1" value="无" name="medium_report" value="">&nbsp;
+						<input type="button" value="添加">
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">结题报告：</td>
+					<td colspan="3" align="left">
+						<input type="file" class="l1" value="无" name="final_report" value="">&nbsp;
+						<input type="button" value="添加">
+					</td>
+				</tr>
+				<tr align="center">
+					<td colspan="4">
+						<input onclick="requestjson()" type="button" value="提交">&nbsp;
+						<input type="reset">&nbsp;
+						<input type="button" value="返回">
+					</td>
+				</tr>
+			</table>
+
+		</form>
+	</div>
+
+
+</body>
+
+</html>

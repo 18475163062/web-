@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>wangEditor demo</title>
+    <style>
+        #editor{
+            width: 1100px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor">    // 定义富文本编辑器容器
+        <textarea id="text1" style="width:100%; height:100%;"><p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p></textarea>
+    </div>
+        
+    <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+    <script src="jq/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="jq/wangEditor.min.js"></script>
+    <script type="text/javascript">
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        var $text1 = $('#text1')
+    editor.customConfig.onchange = function (html) {
+        // 监控变化，同步更新到 textarea
+        $text1.val(html)
+    }
+        editor.customConfig.uploadImgShowBase64 = true 
+//         {
+//     // errno 即错误代码，0 表示没有错误。
+//     //       如果有错误，errno != 0，可通过下文中的监听函数 fail 拿到该错误码进行自定义处理
+//     "errno": 0,
+
+//     // data 是一个数组，返回若干图片的线上地址
+//     "data": [
+//         "图片1地址",
+//         "图片2地址",
+//         "……"
+//     ]
+// }
+
+        // 或者 var editor = new E( document.getElementById('#editor') )
+        editor.create()
+        $text1.val(editor.txt.html())
+    </script>
+</body>
+</html>

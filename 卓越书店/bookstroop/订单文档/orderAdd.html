@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>添加订单</title>
+	<script src="./js/jquery-1.9.1.min.js"></script>
+	<script>
+	function orderAdd()
+	{
+		$.ajax({
+			url:"http://192.168.1.138:8080/api/order/insert",
+			 type: "get",
+            data: $("#orderAdd-form").serialize(),
+			dataType: "json",
+            cahce: false,
+			xhrFields:{
+            	 withCredentials:true
+            },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                alert(result.msg);
+                if (result.code == 200) {
+                    // window.location.href = "selectlist.html";
+                }
+            },error: function (result) {
+                alert("网络连接错误！");
+            }
+		});
+	}
+	</script>
+</head>
+<body>
+	<form action="" id="orderAdd-form"> 
+		<div style="width: 120px; height: 45px; background-color:#6ec3c9; text-align: center; line-height: 40px;border:1px solid #000; border-radius:25px; ">添加订单</div>
+	 	<table  align="center" id="order-table" border="1px" width="1100px" cellpadding="5" cellspacing="0">
+           
+            <tr>
+				<td style="text-align: right;">user_id：</td>
+				<td style="text-align: left;"><input type="text" name="user_id"></td>
+            </tr>
+            <tr>
+				<td style="text-align: right;">order_code：</td>
+				<td style="text-align: left;"><input type="text" name="order_code"></td>
+            </tr>
+            <tr>
+				<td style="text-align: right;">address：</td>
+				<td style="text-align: left;"><input type="text" name="address"></td>
+            </tr>
+            <tr>
+				<td style="text-align: right;">user_message：</td>
+				<td style="text-align: left;"><input type="text" name="user_message"></td>
+            </tr>
+            <tr>
+				<td style="text-align: right;">receivre：</td>
+				<td style="text-align: left;"><input type="text" name="receivre"></td>
+            </tr>
+            <tr>
+				<td style="text-align: right;">mobile：</td>
+				<td style="text-align: left;"><input type="text" name="mobile"></td>
+            </tr>
+            <tr>
+				<td style="text-align: right;">create_date：</td>
+				<td style="text-align: left;"><input type="text" name="create_date"></td>
+            </tr>
+             <tr>
+				<td style="text-align: right;">pay_date：</td>
+				<td style="text-align: left;"><input type="text" name="pay_date"></td>
+            </tr>
+             <tr>
+				<td style="text-align: right;">delivery_date：</td>
+				<td style="text-align: left;"><input type="text" name="delivery_date"></td>
+            </tr>
+             <tr>
+				<td style="text-align: right;" >confirm_date：</td>
+				<td style="text-align: left;"><input type="text" name="confirm_date"></td>
+            </tr>
+             <tr>
+				<td style="text-align: right;">status：</td>
+				<td style="text-align: left;"><input type="text" name="status"></td>
+            </tr>
+             <tr>
+             	<td colspan="2" style="text-align: center;">
+	             	<input type="button" value="添加" id="order-add" onclick="orderAdd(this)" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="reset" value="重置" id="order-reset" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:;">返回</a>
+				</td>
+             </tr>
+
+        </table>
+    </form>
+</body>
+</html>

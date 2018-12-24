@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes"
+	/>
+	<title>阳江市教育科研课题动态管理系统</title>
+	<link rel="stylesheet" href="css/main.css">
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script>
+function tuichu(){
+	$.ajax({
+		type:'post',
+		url:"http://192.168.1.137:8089/api/user/logout",
+		data:$("#form1").serialize(),
+		dataType:"json",
+		cache:false,
+		xhrfields:{
+			withCredentials:true
+		},
+		success:function(result){
+			if(result.code == 200){
+				// alert("成功");
+				window.location.href = "denglu.html";
+		}
+			else{alert("退出失败。");}  
+          
+		},
+	});
+}
+</script>
+</head>
+
+<body>
+<form id="form1" enctype="multipart/form-data">
+	<div class="wrapper">
+		<div class="topone">
+			<div class="top-nav">
+				<span>阳江市教育科研课题动态管理系统</span>
+				<ul>
+					<li>
+						<a href="">
+							<img src="img/avatar.png">
+						</a>
+					</li>
+					<li>菜老师</li>
+					<li>
+						<a href="#">
+							<img src="img/03.png">
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<img src="img/ui/setting.png" alt="">
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="top-suo">
+				<input type="text" placeholder="搜索" name="" class="search">
+
+				<button class="button01">搜索</button>
+			</div>
+		</div>
+		<div class="hou">
+			<div class="left">
+				<div class="left-n">
+					<ul>
+						<li class="li01 ">
+							<a href="# ">
+								<img src="img/ui/notice.png" class="pic01">通知公告</a>
+							<span class="fu ">》</span>
+							<ul class="ul02 ">
+								<li class="left-wen ">
+									<a href="noticeAdd.html" target="haha">
+										<img src="img/ui/04.png">添加通知</a>
+								</li>
+								<li class="left-wen ">
+									<a href="tonzhiliebiao.html" target="haha">
+										<img src="img/ui/04.png ">通知列表</a>
+								</li>
+								<li class="left-wen ">
+									<a href="huodonliebiao.html" target="haha">
+										<img src="img/ui/04.png ">活动列表</a>
+								</li>
+							</ul>
+						</li>
+						<li class="li02 ">
+							<a href="# ">
+								<img src="img/ui/user.png" class="pic01">用户管理</a>
+							<span class="fu ">》</span>
+							<ul class="ul02 ">
+								<li class="left-wen ">
+									<a href="# ">
+										<img src="img/ui/04.png">申请审核</a>
+								</li>
+								<li class="left-wen ">
+										<a href="Userlist.html" target="haha">
+										<img src="img/ui/04.png">用户列表</a>
+								</li>
+							</ul>
+						</li>
+						<li class="li03 ">
+							<a href="# ">
+								<img src="img/ui/process.png" class="pic01">过程管理</a>
+							<span class="fu ">》</span>
+							<ul class="ul02 ">
+								<li class="left-3 ">
+									<a href="# ">
+										<img src="img/ui/04.png">课题列表</a>
+								</li>
+								<li class="left-3 ">
+									<a href="# ">
+										<img src="img/ui/04.png">课题申报</a>
+								</li>
+								<li class="left-3 ">
+									<a href="# ">
+										<img src="img/ui/04.png">期中检查</a>
+								</li>
+								<li class="left-3 ">
+									<a href="# ">
+										<img src="img/ui/04.png">重要变更</a>
+								</li>
+								<li class="left-3 ">
+									<a href="# ">
+										<img src="img/ui/04.png">结题验收</a>
+								</li>
+								<li class="left-3 ">
+									<a href="# ">
+										<img src="img/ui/04.png">活动审核</a>
+								</li>
+							</ul>
+						</li>
+						<li class="li04 ">
+							<a href="# ">
+								<img src="img/ui/browse.png" class="pic01">课题浏览</a>
+							<span class="fu ">》</span>
+							<ul class="ul02 ">
+								<li>
+									<a href="ketitianjia.html" target="haha">
+										<img src="img/ui/04.png" alt="">添加课题</a>
+								</li>
+								<li class="left-wen ">
+									<a href="# ">
+										<img src="img/ui/04.png">阳江课题</a>
+								</li>
+								<li class="left-wen ">
+									<a href="beianketiliebiao.html" target="haha">
+										<img src="img/ui/04.png">备案课题</a>
+								</li>
+							</ul>
+						</li>
+						<li class="li05 ">
+							<a href="# ">
+								<img src="img/ui/setting.png" class="pic01">系统设置</a>
+							<span class="fu ">》</span>
+							<ul class="ul02 ">
+								<li class="left-wen ">
+									<a href="ziliaoxiugai.html" target="haha">
+										<img src="img/ui/04.png">资料修改</a>
+								</li>
+								<li class="left-wen ">
+									<a href="pwdUpdate.html" target="haha">
+										<img src="img/ui/04.png">密码修改</a>
+								</li>
+								<li class="left-wen ">
+									<a href="#" onclick="tuichu()">
+										<img src="img/ui/04.png">退出系统</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="right ">
+			     
+				<iframe frameborder="0" width="1107px" height="768px" name="haha"  src="huodonliebiao.html"></iframe>
+
+			</div>
+
+		</div>
+	</div>
+</form>
+</body>
+
+</html>

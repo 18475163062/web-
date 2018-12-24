@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+    <script src="jq/jquery.pagination.js"></script>
+    <style>
+    body{
+    	font-size: 14px;
+    	font-family: "微软雅黑";
+    }
+		.tu{
+			margin-left: -30px;
+			width: 150px;
+			height: 200px;
+		}
+		#buttom{
+			/*border: 1px solid red;*/
+			height: 220px;
+			width: 896px;
+		}
+		#buttom ul li{
+			
+			list-style: none;
+			text-decoration: none;
+		}
+		.left{
+			padding-left: -10px;
+			text-align: center;
+			height: 200px;
+			width: 130px;
+			float: left;
+			border: 1px solid red;
+		}
+		.right{
+			/*padding-left: -20px;*/
+			/*margin-left: -20px;*/
+			padding-right: 60px;
+			line-height: 20px;
+			text-align: left;
+			height: 200px;
+			width: 560px;
+			float: left;
+			border: 1px solid red; 
+		}
+		.white_content {
+
+			display: none;
+			position: absolute;
+			top: 5%;
+			left: 30%;
+			width: 40%;
+			height: 50%;
+			border: 1px solid  #52adff;
+			background-color: white;
+			z-index:1002;
+			/*overflow: auto;*/
+		}
+		#tianjiade{
+			margin-left: 80px;
+			width: 300px;
+			/*border: 1px solid red;*/
+			text-align: left;
+		}
+		.jian{
+			padding-right: 28px;
+		}
+		.jian1{
+			padding-right: 39px;
+		}
+		.jian2{
+			padding-right: 20px;
+		}
+		.jian3{
+			padding-right: 14px;
+		}
+    </style>
+    <script>
+    	function getQueryVariable(variable) {
+    	var query = window.location.search.substring(1);
+    	var vars = query.split("&");
+    	for (var i = 0; i < vars.length; i++) {
+       		var pair = vars[i].split("=");
+        	if (pair[0] == variable) return pair[1];
+    		}
+		}
+		$(function () {
+    	showActivityBox(getQueryVariable("category_id"));
+	});
+		
+		function showActivityBox(category_id, page_num) {
+			var _data = "page_num =" + page_num + "&page_size=";
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/Book/select?category_id=" + category_id,
+				type: "get",
+        		dataType: "json",
+        		cache: false,
+        		xhrFields: {
+           		   withCredentials: true
+        		},
+        		beforeSend: function () {},
+        		complete: function () {},
+        		data: _data,
+        		success: function (result) {
+           			 if (result.code == 200) {
+           		     initData(result.data);
+          		   }
+       			}
+			});
+		}
+	// }
+		function initData(data){
+			var list =data.list;
+			var tr_str="";
+			for (var i = 0; i < list.length; i++) {
+					tr_str +="<div  id='buttom' data-book_id='" + list[i].book_id + "'>"+
+						// "<li><input type='checkbox' name='checks'   id='allChecksn' ></li>"+
+						"<ul class='left'>"+
+
+							"<li><img onclick='showActivityBo(this)' src='"+ "http://118.89.41.29:8080" + list[i].pic_url +"' class='tu'></img></li>"+
+						"</ul>"+
+						"<ul class='right'>"+
+							"<li>"+ list[i].book_category.name +"</li>"+
+							"<li>"+ list[i].bookname +"&nbsp / &nbsp"+ list[i].author+ "&nbsp / &nbsp"+list[i].press +"&nbsp / &nbsp"+list[i].press_date + "&nbsp / &nbsp"+ "￥"+list[i].price+"元" +"</li>"+
+							"<li>"+ list[i].mount +"</li>"+
+							"<li>"+ list[i].bookcontent +"</li>"+
+						"</ul>"+
+						"<ul>"+"<a href='#' onclick='deleteItem(this)'>删除</a>" +"<br>" +"<a href='#' onclick='showActivityUpdateBox(this)'>修改</a>"+
+						 
+						"</ul>"+
+					"</div>";
+			}
+			$("#container").html(tr_str);
+		}
+    </script>
+
+  
+
+	
+
+    <script>
+    function showActivityBo(item) {
+    window.location.href = "book_c_selectByid.html?book_id=" + $(item).closest("div").data("book_id");
+    }
+    </script>
+
+
+   
+	
+	
+
+    <!-- 弹出框 -->
+	<script type="text/javascript">
+		//弹出隐藏层
+		function ShowDiv(show_div,bg_div){
+		document.getElementById(show_div).style.display='block';
+		document.getElementById(bg_div).style.display='block' ;
+		var bgdiv = document.getElementById(bg_div);
+		bgdiv.style.width = document.body.scrollWidth;
+		// bgdiv.style.height = $(document).height();
+		$("#"+bg_div).height($(document).height());
+		};
+		//关闭弹出层
+		function CloseDiv(show_div,bg_div)
+		{
+		document.getElementById(show_div).style.display='none';
+		document.getElementById(bg_div).style.display='none';
+		};
+	</script>
+	
+
+	<!-- 搜索 -->
+	<script>
+		function sousuo(){
+			$(".activity-update-boxx").show();
+		$.ajax({
+			type:'get',
+			url:'http://118.89.41.29:8080/api/Book/selectBook',
+			data:$("#tianjia").serialize(),
+			dataType:"json",
+			cache:false,
+			xhrFields: {
+                withCredentials: true
+            },
+            success:function(result){
+            	if (result.code == 200) {
+            		initDate(result.data);
+            	}
+            }
+		})
+	}
+	function initDate(data){
+			var listt = data.list;
+			var tr_str="";
+			for (var i = 0; i < listt.length; i++) {
+				tr_str += "<div id='top' data-category_id='"+listt[i].category_id+"'>"+
+					
+						"<ul id='top1'>"+
+							"<li ><a href='#' onclick='showActivityBox(this)'>" + listt[i].bookname +"</a></li>"+
+						"</ul>"+
+					
+				"</div>";
+			}
+			$("#button").html(tr_str);
+		}
+	</script>
+</head>
+<body>
+	
+		<div>
+
+		    <div>
+		    	<form enctype="multipart/form-data" id="sou">
+					<input type="text" name="bookname"><input type="button" onclick="sousuo()" value="搜索">
+		    	</form>
+		    </div>
+		    
+		    <div class="activity-update-boxx" style="background: #f1f1fc;  position: fixed; width: 100%; height:100%; margin:0px; padding:0px; z-index: 900; display: none;" >
+				<div id="activity-update-dialog" >
+					<div id="subject-update">
+					     <div id="button"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="container">
+
+				
+			</div>
+			<div align="center" style="clear: both;" >
+		            <!-- <div class="M-box"></div> -->
+		            <a href="book_select.html">返回</a>
+		    </div>
+
+        </div>
+</body>
+</html>

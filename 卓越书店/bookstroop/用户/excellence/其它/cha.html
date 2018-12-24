@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	
+	<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+		#user-list-table {
+			width: 1107px;
+			background-color: #f1f1fc;
+			height: 768px;
+			
+		}
+
+		
+		#user-list-table tr:hover {
+			background: #f1f1fc;
+		}
+
+		#user-list-table {
+			background: #eaf7ff;
+		}
+
+		#user-list-table th {
+			background: #96d5ff;
+		}
+
+		#page-num {
+			width: 30px;
+			background-color: #f1f1fc;
+			border: #000 1px solid;
+		}
+
+		a {
+			text-decoration: none;
+			color: #000;
+		}
+
+		#user-list-page a {
+			min-width: 15px;
+			color: black;
+			text-align: center;
+			background: white;
+			border: 1px solid #eeeeee;
+			border-radius: 5px;
+			padding: 5px 10px;
+			margin: 20px 2px;
+			display: inline-block;
+		}
+
+		#user-list-page span {
+			min-width: 15px;
+			text-align: center;
+			border: 1px solid transparent;
+			padding: 5px 10px;
+			margin: 0 2px;
+			display: inline-block;
+
+		}
+
+		#user-list-page .active {
+			color: white;
+			background: #96d5ff;
+			border-radius: 5px;
+		}
+
+		.jump-ipt {
+			width: 30px;
+		}
+
+		.cc {
+			text-align: center;
+		}
+	</style>
+
+</head>
+<body>
+	<div style="height: 100%; padding-left: 200px;">
+	</div>
+	<div id="pjax-container" style="padding-top: 80px;">
+		<span>用户列表</span>
+		<table align="left" id="user-list-table"></table>
+		<div align="center">
+				<div id="user-list-page" class="page-box"></div>
+			</div>
+	</div>
+</body>
+<script  src="./js/jquery-1.9.1.min.js"></script> 
+ <script>
+ 	       var basePath = "http://192.168.1.138:8080";
+
+        $(function () {
+            getData(1);
+        });
+
+        function getData(page_num) {
+            var _data = "page_num=" + page_num + "&page_size=10";
+            $.ajax({
+                url: "http://192.168.1.138:8080/api/user/list",
+                type: "get",
+                dataType: "json",
+                
+                beforeSend: function () {},
+                complete: function () {},
+                data: _data,
+                success: function (result) {
+                    if (result.code == 200) {
+                        initData(result.data);
+
+                    }
+                }
+            });
+        }
+
+        function initData(data) {
+            var list = data.list;
+            var tr_str = "<tr>" 
+                 + "<th  width='180px'>密码：</th>"
+                 + "<th  width='180px'>email</th>"
+                 + "<th  width='280px'>操作</th>"
+                "</tr>";
+            for (var i = 0; i < list.length; i++) {
+                tr_str += "<tr data-id='" + list[i].id + "'>" +
+                    "<td class='cc'>" + list[i].password + "</td>" +
+                    "<td  class='cc'>" + list[i].email + " </td>" +
+                  "<td  class='cc'>&nbsp&nbsp<a  href='/noticeDetail.html' >查看&nbsp&nbsp<a  href='javascript:void(0)' onclick='showNoticeUpdateBox(this)'  >修改&nbsp&nbsp<a  href='javascript:void(0);'  onclick='deleteItem(this)'>删除</td>" +
+                    "</tr>";
+
+            }
+            $("#user-list-table").html(tr_str);
+
+            // $("#user-list-page").pagination({
+            //     pageCount: data.pages,
+            //     current: data.page_num,
+            //     callback: 'pageselectCallback',
+            //     prevContent: "上一页",
+            //     nextContent: "下一页",
+            //     jump: true,
+            //     coping: true,
+            //     callback: function (api) {
+            //         getData(api.getCurrent())
+            //     }
+            // });
+        }
+ </script>
+ <!-- <script src="./js/jquery.pagination.js">
+	</script> -->
+
+</html>

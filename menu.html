@@ -1,0 +1,41 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>菜单</title>
+    <script src="./jq/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<ul id="menu-box"></ul>
+<script type="text/javascript">
+    var json =[{"title":"通知公告","child":[{"title":"添加通知","url":"/notice/add","price":"1"},{"title":"通知列表","url":"/notice/list"},{"title":"活动列表","url":"/activity/list"}]},{"title":"课题申报","child":[{"title":"申报时限","url":""},{"title":"课题申报","url":""}]},{"title":"过程管理","child":[{"title":"课题列表","url":"/subject/list"},{"title":"开题报告","url":""},{"title":"中期报告","url":""},{"title":"结题验收","url":""},{"title":"重要变更","url":""},{"title":"活动审核","url":"/activity/add"}]},{"title":"备案课题","child":[{"title":"添加课题","url":"/record/add"},{"title":"课题列表","url":"/record/list"}]},{"title":"系统设置","child":[{"title":"资料修改","url":"/user/update/info"},{"title":"密码修改","url":"/user/update/password"},{"title":"退出系统","url":"/logout"}]}];
+    $(function () {
+
+        console.log("id:" + getQueryVariable("id"));
+
+        liStr = "";
+        for (x in json) {
+            liStr += '<li><p>' + json[x].title + '</p><ul>';
+
+            var child = json[x].child;
+            for (y in child) {
+                liStr += '<li><a href="' + child[y].url + '">' + child[y].title + '</a></li>';
+                liStr += '<li><a href="' + child[y].url + '">' + child[y].price + '</a></li>';
+            }
+
+            liStr += '</ul></li>';
+        }
+        $("#menu-box").html(liStr);
+        
+    });
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) return pair[1];
+        }
+    }
+</script>
+</body>
+</html>

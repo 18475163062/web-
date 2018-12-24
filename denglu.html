@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+      <style type="text/css">
+        body {
+            margin: 0px auto;
+        }
+
+        .guestbg {
+            background-image: url(img/240386-16100ZII846.jpg);
+            background-repeat: no-repeat;
+            opacity: 100;
+            width: 1280px;
+            height: 640px;
+            margin: 0px auto;
+            text-align: center;
+            margin-left: 250px;
+        }
+
+        .guestfont {
+            color: rgb(14, 13, 13);
+            font-size: 20px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .textnn {
+            border: none;
+            background-color: transparent;
+        }
+
+        .centenTable {
+            margin: 0 auto;
+
+        }
+    </style>
+    <script src="jq/jquery-1.9.1.min.js"></script>
+    <script src="./js/security.js"></script>
+    <script>
+     function login() {
+        $.ajax({
+            url: "http://192.168.1.137:8089/api/user/pubkey",
+            type: "post",
+            dataType: "json",
+            cache: false,
+
+                        xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    var login_form = $("#login-form");
+                    var pwd = login_form.find("input[name=password]").val();
+                    var modulus = result.data.modulus;
+                    var exponent = result.data.exponent;
+                    //加密
+                    var key = RSAUtils.getKeyPair(exponent, "", modulus);
+                    var apwd = RSAUtils.encryptedString(key, JSON.stringify({"password":pwd}));
+                    $.ajax({
+                        url: "http://192.168.1.137:8089/api/user/login",
+                        type: "post",
+                        data: "uname=" + login_form.find("input[name=uname]").val() + "&password=" + apwd,
+                        dataType: "json",
+                        
+                        cache: false,
+                        xhrFields: {
+                withCredentials: true
+            },
+                        beforeSend: function() {
+                        },
+                        complete: function() {
+                        },
+                        success: function (result) {
+                            if (result.code == 200) {
+                                window.location.href ="main.html";
+                            } else {
+                                alert(result.msg);
+                            }
+                        },error: function (result) {
+                            alert("网络连接失败！");
+                        }
+                    });
+                } else {
+                    alert(result.msg);
+                }
+            },error: function (result) {
+                alert("网络连接失败！");
+            }
+           
+        });
+    }
+    function noticeList() {
+        $.ajax({
+            url: "http://192.168.1.137:8089/api/data",
+            type: "get",
+            dataType: "json",
+            cache: false,
+            xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    var data = result.data;
+                    for (x in data) {
+                        console.log("titile: " + data[x].title);
+
+                        var child = data[x].child;
+                        for (y in child) {
+                            console.log("child: " + child[y].title + ", url: " + child[y].url);
+                        }
+                    }
+
+                    $("#menu").html('""');
+                    $("#menu").append('<ul>');
+                    for (x in data) {
+                        $("#menu").append('<li>');
+                        $("#menu").append('<p>' + data[x].title + '</p>');
+                        var child = data[x].child;
+                        $("#menu").append('<ul>');
+                        for (y in child) {
+                            $("#menu").append('<li><a href="' + child[y].url + '">' + child[y].title + '</a></li>');
+                        }
+                        $("#menu").append('</ul>');
+                        $("#menu").append('</li>');
+                    }
+                    $("#menu").append("</ul>");
+                } else {
+                    console.log(result.msg);
+                }
+            },
+            error: function (result) {
+
+            }
+        });
+    }
+    </script>
+</head>
+<body>
+    <div class="guestbg"></div>
+    <div>
+        <form id="login-form" method="post" enctype="multipart/form-data">
+            <table cellpadding="5" cellspacing="0" border="0" class="centenTable">
+                <tr>
+                    <td>
+                        <span class="guestfont">
+                            账号：
+                        </span>
+                    </td>
+                    <td>
+                        <span class="guestfont">
+                            密码：
+                        </span>
+                    </td>
+                    <td>
+                        <span class="guestfont">
+                            角色：
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" name="uname" value="" autocomplete="off" />
+                    </td>
+                    <td>
+                        <input type="password" name="password" value="" autocomplete="off" />
+                    </td>
+                    <td>
+                        <label>
+                            <select autocomplete="off">
+                                <option>
+                                    请选择您的角色
+                                </option>
+                                <option>
+                                    <a onclick="noticeList()">市科研办菜单</a>
+                                </option>
+                                <option>
+                                    <a onclick="noticeList()">课题主持人</a>
+                                </option>
+                                <option>
+                                    <a onclick="noticeList()">学校管理员</a>
+                                </option>
+                                <option>
+                                    <a onclick="noticeList()">专家指导小组成员</a>
+                                </option>
+                                <option>
+                                    <a onclick="noticeList()">区科研办管理员</a>
+                                </option>
+                                <option>
+                                    <a onclick="noticeList()">系统管理员</a>
+                                </option>
+                            </select>
+                        </label>
+                    </td>
+                    <td>
+                        <input type="button"  value="  登    录  " class="textnn" onclick="login()"  />
+                        <a href="zhuce.html">
+                            <input type="button" name="" value="  注    册  " class="textnn" />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jq/jquery-1.9.1.min.js"></script>
+	<script src="jq/jquery.pagination.js"></script>
+	<style>
+	*{margin: 0;padding:0;}
+		.tu{
+			/*position: relative;
+			top: -20px;*/
+			width: 100px;
+			height: 150px;
+			/*border: 1px solid red;*/
+		}
+		li{
+			list-style: none;
+			text-decoration: none;
+		}
+		.left{
+			/*margin-top: 10px;*/
+			/*margin-bottom:  30px;*/
+			text-align: right;
+			width: 150px;
+			height: 210px;
+			float: left;
+
+			/*border: 1px solid red;*/
+		}
+		.left1{
+			padding-left: 30px;
+			/*margin-top: 10px;*/
+			/*margin-bottom:  30px;*/
+			float: left;
+			/*margin: auto;*/
+			height: 210px;
+			/*border: 1px solid red;*/
+			font-size: 12px;
+			width: 220px;
+		}
+		.tu1{
+			/*border: 1px solid #eee;*/
+			border-radius:100%;
+			width: 40px;
+			height: 40px;
+		}
+		.left2{
+			/*margin-top: 10px;*/
+			/*margin-bottom:  30px;*/
+			text-align: center;
+			float: left;
+			height: 210px;
+			/*border: 1px solid red;*/
+			font-size: 12px;
+			width: 380px;
+		}
+		#top{
+			margin-top : 20px;
+			
+			height: 210px;
+			border-bottom:  1px solid red;
+		}
+		.left3{
+			float: left;
+			width: 80px;
+			height: 210px;
+			text-align: right ;
+			/*border: 1px solid red;*/
+		}
+		.l1{
+			white-space: nowrap; 
+		    /*（不换行，一行显示）*/
+		    text-overflow: ellipsis; 
+		    /*(溢出用省略号）*/
+     		overflow: hidden;  
+     		
+			padding-bottom: 10px;
+			padding-top: 10px;
+			padding-left: 40px;
+			text-align: center;
+			/*border: 1px solid red;*/
+		}
+		/*p{
+			border: 1px solid red;
+			width: 100px;
+		    height: 20px;
+		    overflow: hidden;　　　　　　　　对超出容器的部分强制截取，高度不确定则换行
+		    text-overflow: ellipsis;　　　　显示省略符号来代表被修剪的文本。
+		    white-space: nowrap;
+		}
+		p:hover{
+	    	width: auto;
+		}*/
+		.leftl1{
+			padding-top: 40px;
+			line-height: 20px;
+		}
+		.left2l1{
+			text-align: right;
+			padding-right: 5px;
+			/*border: 1px solid red;*/
+			/*width:100px;*/
+		}
+		.left2l2{
+			text-align: right;
+			/*width:100px;*/
+			/*border: 1px solid red;*/
+		}
+		.leftl2{
+			padding-top: 80px;
+			/*border: 1px solid red;*/
+			line-height: 20px;
+		}
+	</style>
+	<script>
+		$(function(){
+			getData(1);
+		});
+		function getData(page_num){
+			var _data = "page_num=" + page_num + "&page_size=3";
+			$.ajax({
+				url:"http://118.89.41.29:8080/api/record/selectStatus?status=" + 5,
+				type:"get",
+				dataType:"json",
+				cache:false,
+				xhrFields:{
+					withCredentials:true
+				},
+				data:_data,
+				success:function(result){
+					if (result.code ==200) {
+						initData(result.data);
+					}
+				}
+			})
+		}
+		function initData(data){
+			var list = data.list;
+			var tr_str="";
+			for (var i = 0; i < list.length; i++) {
+				tr_str += "<div id='top' data-record_id='"+list[i].record_id+"'>"+
+				
+					"<article class='left'>"+
+							"<li class='l1'>"+ list[i].book.bookname +"</li>"+
+							"<li ><img src='"+ "http://118.89.41.29:8080" + list[i].book.pic_url +"' class='tu'></img></li>"+
+					"</article>"+
+						
+					"<article class='left1'>"+
+						"<article class='leftl1'>"+
+							
+							"<li>"+ list[i].book.name +"</li>"+
+							"<li>"+ list[i].book.isbn +"</li>"+
+							"<li>"+ list[i].record_enum.desc +"</li>"+
+							"<li>"+"借书时间："+ list[i].create_time +"</li>"+
+							"<li>"+"还书时间："+ list[i].return_time+"</li>"+
+							"<li><a href='#' onclick='deleteItem(this)'>删除</a></li>"+
+						"</article>"+
+					"</article>"+
+
+					"<article class='left2'>"+ 
+						"<article class='leftl2'>"+
+							
+							"<li class='left2l2'><img src='" + "http://118.89.41.29:8080"+ list[i].user.image +"' class='tu1'></img></li>"+
+							"<li class='left2l1'>"+ list[i].user.username +"</li>"+
+						"</article>"+
+					"</article>"+
+					"<article class='left3'>"+
+						"<li>"+ list[i].record_enum.desc +"</li>"+
+					"</article>"+
+					
+				"</div>";
+			}
+			$("#button").html(tr_str);
+
+			$(".M-box").pagination({
+				pageCount: data.pages,
+				current: data.page_num,
+				callback: 'pageselectCallback',
+				prevContent: "上一页",
+				nextContent: "下一页",
+				jump: true,
+				coping: true,
+				callback: function (api) {
+					getData(api.getCurrent())
+				}
+			});
+
+		}
+	</script>
+	<!-- 删除 -->
+	<script>
+		function deleteItem(item) {
+			if (confirm("确定要删除吗？")) {
+				var record_id = $(item).closest("div").data("record_id");
+				var data = "";
+				data += "record_id=" + record_id;
+				$.ajax({
+					url: 'http://118.89.41.29:8080/api/record/delete',
+					type: "post",
+					dataType: "json",
+					cache: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					 beforeSend: function () {},
+					 complete: function () {},
+					data: data,
+					success: function (result) {
+						if (result.code == 200) {
+							alert(result.msg);
+							var tr = $(item).closest("div");
+							tr.remove();
+						}
+
+					}
+
+				});
+			}
+		}
+	</script>
+</head>
+<body>
+	<div>
+		<div id="button"></div>
+		<div align="center" style="clear: both; padding-top: 20px;">
+			<div class="M-box"></div>
+		</div>
+	</div>
+</body>
+</html>

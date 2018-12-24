@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Jquery异步查询加载效果</title>
+  <script  src="./js/jquery-1.9.1.min.js"></script>
+ 
+  <style type="text/css">
+  .span_query { cursor:pointer;}
+  </style>
+  <script type="text/javascript">
+    $(function () {
+      $(".span_query").click(function () {
+        var val = $(this).attr("data-value");
+        var id = $(this).attr("id");
+        AjaxQuery($(this),val);
+      });
+    });
+    function AjaxQuery(obj, v) {
+      $.ajax({
+        url: 'Ajax/Handler.ashx?queryType=score&queryValue=' + v,
+        type: 'POST',
+        dataType: 'text',
+        timeout: 10000,
+        cache: false,
+        beforeSend: LoadFunction,
+        error: erryFunction,
+        success: succFunction
+      })
+      function LoadFunction() {
+        obj.html('<img src="Images/loading02.gif" />');
+      }
+      function erryFunction() {
+        obj.html('error');
+      }
+      function succFunction(tt) {
+        obj.html('');
+        obj.html(tt);
+      }
+    }
+  </script>
+</head>
+<body>
+  <form id="form1" runat="server">
+  <div>
+  <table style="width:100%" class="gvCss">
+    <tr class="head"><td style="width:10%;">姓名</td><td style="width:30%;">语文</td><td style="width:30%;">数学</td><td style="width:30%;">英语</td></tr>
+    <tr><td>张三</td>
+      <td id="query1" title="点击查询" class="span_query" data-value="1">查询</td>
+      <td id="query2" title="点击查询" class="span_query" data-value="2">查询</td>
+      <td id="query3" title="点击查询" class="span_query" data-value="3">查询</td></tr>
+  </table>
+  </div>
+  </form>
+</body>
+</html>
